@@ -1,0 +1,10 @@
+exclude tests
+recursive-exclude tests *
+
+exclude .pre-commit-config.yaml
+exclude .gitlab-ci.yml
+
+include LICENSE
+include README.md
+include example.py
+recursive-include logos *.png

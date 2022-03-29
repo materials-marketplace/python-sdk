@@ -7,7 +7,7 @@ Python Software Development Toolkit (SDK) to communicate with the Materials Mark
 To install the package, execute:
 
 ```console
-pip install git+https://github.com/materials-marketplace/python-sdk.git
+pip install marketplace_sdk
 ```
 
 ## Usage
@@ -32,7 +32,6 @@ To create a new release, clone the repository, install development dependencies 
 This will:
 
   1. Create a tagged release with bumped version and push it to the repository.
-  2. Trigger a GitLab CI workflow that publishes the package on the [GitLab package registry](https://gitlab.cc-asp.fraunhofer.de/MarketPlace/python-sdk/-/packages).
   2. Trigger a GitHub actions workflow that creates a GitHub release and publishes it on PyPI.
 
 Additional notes:

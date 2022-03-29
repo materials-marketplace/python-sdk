@@ -7,7 +7,7 @@ Python Software Development Toolkit (SDK) to communicate with the Materials Mark
 To install the package, execute:
 
 ```console
-pip install marketplace_sdk
+pip install marketplace-sdk
 ```
 
 ## Usage

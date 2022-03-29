@@ -14,4 +14,4 @@ try:
 except RuntimeError:
     __version__ = get_version("marketplace-sdk").serialize()
 except ImportError:
-    __version__ = "v0.1.0"
+    __version__ = "v0.1.1"

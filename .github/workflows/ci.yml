@@ -5,23 +5,21 @@ on: [push, pull_request]
 
 jobs:
 
-# TODO: Re-enable after issue described in #1 is resolved.
-#    pre-commit:
-#
-#        runs-on: ubuntu-latest
-#
-#        steps:
-#            - uses: actions/checkout@v2
-#            - name: Set up Python 3.10
-#              uses: actions/setup-python@v2
-#              with:
-#                  python-version: '3.10'
-#            - uses: pre-commit/action@v2.0.0
+    pre-commit:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python 3.10
+              uses: actions/setup-python@v2
+              with:
+                  python-version: '3.10'
+            - uses: pre-commit/action@v2.0.0
 
     test-package:
 
-# TODO: Re-enable after issue described in #1 is resolved.
-#        needs: [pre-commit]
+        needs: [pre-commit]
 
         runs-on: ubuntu-latest
         timeout-minutes: 10

@@ -1,4 +1,4 @@
-"""This module contains all functionality regarding data sink apps..
+"""This module contains all functionality regarding data sink apps.
 
 .. currentmodule:: marketplace.app.data_sink_app
 .. moduleauthor:: Pablo de Andres, Pranjali Singh (Fraunhofer IWM)
@@ -28,7 +28,7 @@ class DataSinkApp(MarketPlaceClient):
     @check_capability_availability
     def create_cuds_dataset(self, config: Dict) -> Union[Dict, str]:
         """Store a CUDS dataset.
-        
+
         Args:
             config (Dict): creation data
 

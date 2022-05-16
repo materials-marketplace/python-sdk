@@ -15,7 +15,7 @@ def my_endpoint_callback(message: Message, headers: Dict[str, str]):
 
 application_id = "3a9e9445-5d59-4d74-a26a-a4cfff366a01"
 rpc_server = RpcServer(
-    host="161.35.206.172",
+    host="www.materials-marketplace.eu",
     queue_name=application_id,
     endpoint_callback=my_endpoint_callback,
 )

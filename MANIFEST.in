@@ -6,5 +6,6 @@ exclude .gitlab-ci.yml
 
 include LICENSE
 include README.md
-include example.py
+include examples/mp_api.py
+include examples/rpc_server.py
 recursive-include logos *.png

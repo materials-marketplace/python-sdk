@@ -4,6 +4,9 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+ApplicationId = NewType("ApplicationId", UUID)
+
+
 DatasetId = NewType("DatasetId", UUID)
 
 
@@ -68,3 +71,7 @@ class TransformationUpdateResponse(BaseModel):
 class TransformationStatusResponse(BaseModel):
     id: TransformationId
     status: TransformationStatus
+
+
+class TransformationListResponse(BaseModel):
+    items: list[TransformationModel]

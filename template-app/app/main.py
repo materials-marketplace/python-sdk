@@ -11,6 +11,7 @@ from marketplace.models import (
     NewTransformationModel,
     TransformationCreateResponse,
     TransformationId,
+    TransformationListResponse,
     TransformationModel,
     TransformationStatusResponse,
     TransformationUpdateModel,
@@ -87,7 +88,7 @@ async def heartbeat() -> HTMLResponse:
 
 
 @app.post(
-    "/dataset",
+    "/datasets",
     operation_id="createDataset",
     tags=["DataSink"],
     response_model=DatasetCreateResponse,
@@ -104,7 +105,7 @@ async def create_dataset(dataset: DatasetModel) -> DatasetCreateResponse:
 
 
 @app.get(
-    "/dataset/{dataset_id}",
+    "/datasets/{dataset_id}",
     operation_id="getDataset",
     tags=["DataSource"],
     response_class=JSONResponse,
@@ -123,7 +124,7 @@ async def get_dataset(dataset_id: DatasetId) -> DatasetModel:
 
 
 @app.post(
-    "/transformation",
+    "/transformations",
     operation_id="newTransformation",
     tags=["Transformation"],
     response_model=TransformationCreateResponse,
@@ -142,7 +143,7 @@ async def create_transformation(
 
 
 @app.get(
-    "/transformation/{transformation_id}",
+    "/transformations/{transformation_id}",
     operation_id="getTransformation",
     tags=["Transformation"],
     response_model=TransformationModel,
@@ -162,7 +163,7 @@ async def get_transformation(
 
 
 @app.delete(
-    "/transformation/{transformation_id}",
+    "/transformations/{transformation_id}",
     operation_id="deleteTransformation",
     tags=["Transformation"],
     status_code=204,
@@ -182,7 +183,7 @@ async def delete_transformation(
 
 
 @app.patch(
-    "/transformation/{transformation_id}",
+    "/transformations/{transformation_id}",
     operation_id="updateTransformation",
     tags=["Transformation"],
     response_model=TransformationUpdateResponse,
@@ -205,7 +206,7 @@ async def update_transformation(
 
 
 # @app.post(
-#     "/transformation/{transformation_id}/run",
+#     "/transformations/{transformation_id}/run",
 #     operation_id="startTransformation",
 #     tags=["Transformation"],
 #     response_model=TransformationUpdateResponse,
@@ -224,7 +225,7 @@ async def update_transformation(
 
 
 # @app.post(
-#     "/transformation/{transformation_id}/stop",
+#     "/transformations/{transformation_id}/stop",
 #     operation_id="stopTransformation",
 #     tags=["Transformation"],
 #     status_code=204,
@@ -241,7 +242,7 @@ async def update_transformation(
 
 
 @app.get(
-    "/transformation/{transformation_id}/status",
+    "/transformations/{transformation_id}/status",
     operation_id="getTransformationStatus",
     tags=["Transformation"],
     response_model=TransformationStatusResponse,
@@ -261,10 +262,10 @@ async def get_transformation_status(
 
 
 @app.get(
-    "/transformation",
+    "/transformations",
     operation_id="getTransformationList",
     tags=["Transformation"],
-    response_model=list[TransformationModel],
+    response_model=TransformationListResponse,
     responses={
         401: {"description": "Not authenticated."},
         500: {"description": "Internal server error."},
@@ -272,6 +273,8 @@ async def get_transformation_status(
         503: {"description": "Service unavailable."},
     },
 )
-async def list_transformation() -> list[TransformationModel]:
+async def list_transformation(
+    limit: int = 100, offset: int = 0
+) -> TransformationListResponse:
     """Retrieve a list of transformations."""
     raise HTTPException(status_code=501, detail="Not implemented.")

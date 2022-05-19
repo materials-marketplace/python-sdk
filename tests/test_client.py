@@ -7,21 +7,21 @@
 """
 import pytest
 
-from marketplace.core import MarketPlaceClient
+from marketplace.client import Client
 
 
 @pytest.fixture
-def marketplace(environment):
-    instance = MarketPlaceClient()
-    yield instance
+def client(environment):
+    client = Client()
+    yield client
 
 
-def test_constructor(marketplace):
+def test_constructor(client):
     pass
 
 
-def test_default_headers(marketplace):
-    headers = marketplace.default_headers
+def test_default_headers(client):
+    headers = client.default_headers
     assert len(headers) >= 2
     for key in ("User-Agent", "Authorization"):
         assert key in headers

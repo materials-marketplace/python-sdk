@@ -8,10 +8,17 @@ platform.
 .. moduleauthor:: Carl Simon Adorf <simon.adorf@epfl.ch>
 """
 
-from .core import MarketPlaceClient
+from . import models
+from .app import DataSinkApp, DataSourceApp, MarketPlaceApp, TransformationApp
+from .client import Client
 from .version import __version__
 
 __all__ = [
-    "MarketPlaceClient",
+    "Client",
+    "DataSinkApp",
+    "DataSourceApp",
+    "MarketPlaceApp",
+    "TransformationApp",
     "__version__",
+    "models",
 ]

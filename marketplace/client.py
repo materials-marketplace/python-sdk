@@ -13,7 +13,7 @@ import requests
 from .version import __version__
 
 
-class MarketPlaceClient:
+class Client:
     """Interact with the MarketPlace platform."""
 
     def __init__(self, marketplace_host_url=None, access_token=None):
@@ -46,27 +46,22 @@ class MarketPlaceClient:
         userinfo.raise_for_status()
         return userinfo.json()
 
-    def _request(self, op, path, **kwargs):
+    def _request(self, op, url, **kwargs):
         kwargs.setdefault("headers", {}).update(self.default_headers)
-        full_url = urljoin(self.marketplace_host_url, path)
-        response = op(url=full_url, **kwargs)
-        if response.status_code != 200:
-            message = (
-                f"Querying MarketPlace for {full_url} returned {response.status_code} "
-                f"because: {response.text}."
-                "Please check the host, client_id and token validity."
-            )
-            raise RuntimeError(message)
-        return response
+        full_url = urljoin(self.marketplace_host_url, url)
+        return op(url=full_url, **kwargs)
 
-    def get(self, path: str, **kwargs):
-        return self._request(requests.get, path, **kwargs)
+    def get(self, url: str, **kwargs):
+        return self._request(requests.get, url, **kwargs)
 
-    def post(self, path: str, **kwargs):
-        return self._request(requests.post, path, **kwargs)
+    def post(self, url: str, **kwargs):
+        return self._request(requests.post, url, **kwargs)
 
-    def put(self, path: str, **kwargs):
-        return self._request(requests.put, path, **kwargs)
+    def put(self, url: str, **kwargs):
+        return self._request(requests.put, url, **kwargs)
 
-    def delete(self, path: str, **kwargs):
-        return self._request(requests.delete, path, **kwargs)
+    def patch(self, url: str, **kwargs):
+        return self._request(requests.patch, url, **kwargs)
+
+    def delete(self, url: str, **kwargs):
+        return self._request(requests.delete, url, **kwargs)

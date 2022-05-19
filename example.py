@@ -2,12 +2,12 @@
 from pprint import pprint
 
 from marketplace.app.marketplace_app import MarketPlaceApp
-from marketplace.core import MarketPlaceClient
+from marketplace.client import Client
 
 # General MarketPlaceClient for simple requests like user info
 # Remember to save your access token in an environment variable with
 # export MP_ACCESS_TOKEN="<token>"
-mp_client = MarketPlaceClient()
+mp_client = Client()
 # Show the user information
 pprint(mp_client.userinfo)
 

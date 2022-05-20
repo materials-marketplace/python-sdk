@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import Literal, NewType, TypeAlias
-from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import UUID4, BaseModel
 
-ApplicationId = NewType("ApplicationId", UUID)
+ApplicationId = NewType("ApplicationId", UUID4)
 
 
-DatasetId = NewType("DatasetId", UUID)
+DatasetId = NewType("DatasetId", UUID4)
 
 
 class DatasetModel(BaseModel):
@@ -18,7 +17,7 @@ class DatasetCreateResponse(BaseModel):
     id: DatasetId
 
 
-TransformationId = NewType("TransformationId", UUID)
+TransformationId = NewType("TransformationId", UUID4)
 
 
 class TransformationStatus(str, Enum):

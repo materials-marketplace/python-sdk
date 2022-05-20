@@ -48,6 +48,7 @@ app = MarketPlaceAPI(
         "url": "https://www.example.com/contact",
         "email": "mail@example.com",
     },
+    license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
     dependencies=[Depends(AuthTokenBearer())],
     servers=[{"url": "https://marketplace.example.com"}],
 )

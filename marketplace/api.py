@@ -39,7 +39,7 @@ class MarketPlaceAPI(FastAPI):
         return openapi_schema
 
 
-app = MarketPlaceAPI(
+api = MarketPlaceAPI(
     title="Marketplace Template App",
     description="This is a template app for the Materials Marketplace.",
     version="0.1.0",
@@ -52,10 +52,10 @@ app = MarketPlaceAPI(
     dependencies=[Depends(AuthTokenBearer())],
     servers=[{"url": "https://marketplace.example.com"}],
 )
-app.middleware("http")(catch_authentication_request_errors_middleware)
+api.middleware("http")(catch_authentication_request_errors_middleware)
 
 
-@app.get(
+@api.get(
     "/",
     operation_id="frontend",
     tags=["FrontPage"],
@@ -72,7 +72,7 @@ async def frontpage() -> HTMLResponse:
     raise HTTPException(status_code=404, detail="Not found.")
 
 
-@app.get(
+@api.get(
     "/health",
     operation_id="heartbeat",
     tags=["System"],
@@ -88,7 +88,7 @@ async def heartbeat() -> HTMLResponse:
     return HTMLResponse(content="<html><body>OK</body></html>", status_code=200)
 
 
-@app.post(
+@api.post(
     "/datasets",
     operation_id="createDataset",
     tags=["DataSink"],
@@ -105,7 +105,7 @@ async def create_dataset(dataset: DatasetModel) -> DatasetCreateResponse:
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.get(
+@api.get(
     "/datasets/{dataset_id}",
     operation_id="getDataset",
     tags=["DataSource"],
@@ -124,7 +124,7 @@ async def get_dataset(dataset_id: DatasetId) -> DatasetModel:
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.post(
+@api.post(
     "/transformations",
     operation_id="newTransformation",
     tags=["Transformation"],
@@ -143,7 +143,7 @@ async def create_transformation(
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.get(
+@api.get(
     "/transformations/{transformation_id}",
     operation_id="getTransformation",
     tags=["Transformation"],
@@ -163,7 +163,7 @@ async def get_transformation(
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.delete(
+@api.delete(
     "/transformations/{transformation_id}",
     operation_id="deleteTransformation",
     tags=["Transformation"],
@@ -183,7 +183,7 @@ async def delete_transformation(
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.patch(
+@api.patch(
     "/transformations/{transformation_id}",
     operation_id="updateTransformation",
     tags=["Transformation"],
@@ -242,7 +242,7 @@ async def update_transformation(
 #     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.get(
+@api.get(
     "/transformations/{transformation_id}/status",
     operation_id="getTransformationStatus",
     tags=["Transformation"],
@@ -262,7 +262,7 @@ async def get_transformation_status(
     raise HTTPException(status_code=501, detail="Not implemented.")
 
 
-@app.get(
+@api.get(
     "/transformations",
     operation_id="getTransformationList",
     tags=["Transformation"],

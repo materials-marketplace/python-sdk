@@ -21,7 +21,7 @@ def test_constructor(client):
 
 
 def test_default_headers(client):
-    headers = client.default_headers
+    headers = client.session.headers
     assert len(headers) >= 2
     for key in ("User-Agent", "Authorization"):
         assert key in headers

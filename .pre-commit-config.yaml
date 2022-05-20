@@ -1,8 +1,8 @@
 ---
 repos:
 
-    - repo: .
-      rev: 38fea31c4db0f6102635d7000a5412cef8e10c0c
+    - repo: https://github.com/materials-marketplace/python-sdk
+      rev: 6e98012d66f70942a00f8373c12ca628adee423f
       hooks:
           - id: sync-openapi-spec
 

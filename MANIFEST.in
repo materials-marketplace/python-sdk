@@ -8,4 +8,5 @@ exclude .pre-commit-hooks.yaml
 include LICENSE
 include README.md
 include example.py
+include openapi.json
 recursive-include logos *.png

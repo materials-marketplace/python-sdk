@@ -1,6 +1,11 @@
 ---
 repos:
 
+    - repo: .
+      rev: 38fea31c4db0f6102635d7000a5412cef8e10c0c
+      hooks:
+          - id: sync-openapi-spec
+
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v4.2.0
       hooks:

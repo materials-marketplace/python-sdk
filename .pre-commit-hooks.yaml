@@ -3,5 +3,6 @@
       name: Synchronize OpenAPI specification
       description: Synchronizes the OpenAPI specification from the FastAPI template app.
       entry: sync-openapi-spec
+      files: .*\.(py|yaml)
       language: python
       language_version: '3.10'

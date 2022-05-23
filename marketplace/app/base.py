@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 from uuid import UUID
 
-from ..applicaton_proxy import ApplicationProxy
+from ..application_proxy import ApplicationProxy
 from ..client import Client
 from ..models import ApplicationId
 

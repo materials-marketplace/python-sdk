@@ -26,10 +26,7 @@ class RpcServer:
             message = Message.parse_obj(json.loads(body.decode()))
             logger.info("Messaged received for endpoint %s" % message.endpoint)
             body_str = base64.b64decode(message.body_base64)
-            body_dict = None
-            if body_str:
-                body_dict = json.loads(body_str)
-            message.body = body_dict
+            message.body = json.loads(body_str) if body_str else None
 
             response = self.endpoint_callback(message, properties.headers)
 

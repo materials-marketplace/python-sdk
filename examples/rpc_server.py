@@ -13,7 +13,7 @@ def my_endpoint_callback(message: Message, headers: Dict[str, str]):
     return json.dumps(response)
 
 
-application_id = "3a9e9445-5d59-4d74-a26a-a4cfff366a01"
+application_id = "<application-id>"
 rpc_server = RpcServer(
     host="www.materials-marketplace.eu",
     queue_name=application_id,

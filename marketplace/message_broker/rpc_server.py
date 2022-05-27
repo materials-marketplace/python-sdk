@@ -29,13 +29,14 @@ class RpcServer:
             body_str = base64.b64decode(message.body_base64)
             message.body = json.loads(body_str) if body_str else None
 
-            response = self.endpoint_callback(message, properties.headers)
+            response, headers = self.endpoint_callback(message, properties.headers)
 
             ch.basic_publish(
                 exchange="",
                 routing_key=properties.reply_to,
                 properties=pika.BasicProperties(
-                    correlation_id=properties.correlation_id
+                    correlation_id=properties.correlation_id,
+                    headers=headers,
                 ),
                 body=response.json(),
             )

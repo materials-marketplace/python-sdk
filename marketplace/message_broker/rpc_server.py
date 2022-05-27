@@ -4,26 +4,27 @@ import logging
 
 import pika
 
-from .models.message import Message
+from .models.request_message import RequestMessage
+from .utils import calc_queue_name
 
 logger = logging.getLogger(__name__)
 
 
 class RpcServer:
-    def __init__(self, host, queue_name, endpoint_callback):
-        self.queue_name = queue_name
+    def __init__(self, host, application_id, application_secret, endpoint_callback):
+        self.queue_name = calc_queue_name(application_id, application_secret)
         self.endpoint_callback = endpoint_callback
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
         self.channel = connection.channel()
 
         self.channel.queue_delete(
-            queue=queue_name
+            queue=self.queue_name
         )  # Delete old queue. Otherwise, first message might not be consumed.
-        self.channel.queue_declare(queue=queue_name)
+        self.channel.queue_declare(queue=self.queue_name)
 
     def consume_messages(self):
         def callback(ch, method, properties, body):
-            message = Message.parse_obj(json.loads(body.decode()))
+            message = RequestMessage.parse_obj(json.loads(body.decode()))
             logger.info("Messaged received for endpoint %s" % message.endpoint)
             body_str = base64.b64decode(message.body_base64)
             message.body = json.loads(body_str) if body_str else None
@@ -36,7 +37,7 @@ class RpcServer:
                 properties=pika.BasicProperties(
                     correlation_id=properties.correlation_id
                 ),
-                body=response,
+                body=response.json(),
             )
             ch.basic_ack(delivery_tag=method.delivery_tag)
 

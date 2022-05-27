@@ -15,7 +15,7 @@ def my_endpoint_callback(
     response = {"numberOfKeysInPayload": str(result)}
     print("Done!")
     response_message = ResponseMessage(
-        response_code=200,
+        status_code=200,
         body_base64=base64.b64encode(json.dumps(response)).decode(),
         headers={"Content-Type": "application/json"},
     )

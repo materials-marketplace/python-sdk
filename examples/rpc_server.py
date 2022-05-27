@@ -1,15 +1,12 @@
 import base64
 import json
-from typing import Dict, Tuple
 
 from marketplace.message_broker.models.request_message import RequestMessage
 from marketplace.message_broker.models.response_message import ResponseMessage
 from marketplace.message_broker.rpc_server import RpcServer
 
 
-def my_endpoint_callback(
-    request_message: RequestMessage, request_headers: Dict[str, str]
-) -> Tuple[ResponseMessage, Dict[str, str]]:
+def my_endpoint_callback(request_message: RequestMessage) -> ResponseMessage:
     print("Routing to endpoint %r..." % request_message.endpoint)
     result = len(request_message.body) if request_message.body else 0
     response = {"numberOfKeysInPayload": str(result)}
@@ -17,9 +14,9 @@ def my_endpoint_callback(
     response_message = ResponseMessage(
         status_code=200,
         body_base64=base64.b64encode(json.dumps(response).encode("utf-8")),
+        headers={"Content-Type": "application/json"},
     )
-    headers = {"Content-Type": "application/json"}
-    return response_message, headers
+    return response_message
 
 
 rpc_server = RpcServer(

@@ -8,3 +8,4 @@ class RequestMessage(BaseModel):
     body_base64: str = Field(None, description="A base64-encrypted body")
     body: Optional[Any] = Field(None, description="The request message payload")
     query_params: Optional[Dict[str, str]] = Field(None, description="Query parameters")
+    headers: Optional[Dict[str, str]] = Field(None, description="Request headers")

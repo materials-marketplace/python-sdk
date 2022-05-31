@@ -1,6 +1,6 @@
 import json
 
-# TODO Replace local imports of models with GitHub ones
+# TODO Replace local import of message broker models with GitHub ones
 from marketplace.message_broker.models.message_broker import (
     MessageBrokerRequestModel,
     MessageBrokerResponseModel,

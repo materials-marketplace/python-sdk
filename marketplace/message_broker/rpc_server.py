@@ -3,6 +3,7 @@ import logging
 
 import pika
 
+# TODO Replace local imports of models with GitHub ones
 from .models.message_broker import MessageBrokerRequestModel
 from .utils import calc_queue_name
 

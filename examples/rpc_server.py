@@ -1,19 +1,24 @@
-import base64
 import json
 
-from marketplace.message_broker.models.request_message import RequestMessage
-from marketplace.message_broker.models.response_message import ResponseMessage
+# TODO Replace local imports models with GitHub ones
+from marketplace.message_broker.models.message_broker import (
+    MessageBrokerRequestModel,
+    MessageBrokerResponseModel,
+)
 from marketplace.message_broker.rpc_server import RpcServer
 
 
-def my_endpoint_callback(request_message: RequestMessage) -> ResponseMessage:
+def my_message_handler(
+    request_message: MessageBrokerRequestModel,
+) -> MessageBrokerResponseModel:
     print("Routing to endpoint %r..." % request_message.endpoint)
-    result = len(request_message.body) if request_message.body else 0
+    payload = json.loads(request_message.body) if request_message.body else {}
+    result = len(payload)
     response = {"numberOfKeysInPayload": str(result)}
     print("Done!")
-    response_message = ResponseMessage(
+    response_message = MessageBrokerResponseModel(
         status_code=200,
-        body_base64=base64.b64encode(json.dumps(response).encode("utf-8")),
+        body=json.dumps(response),
         headers={"Content-Type": "application/json"},
     )
     return response_message
@@ -23,6 +28,6 @@ rpc_server = RpcServer(
     host="www.materials-marketplace.eu",
     application_id="<application-id>",
     application_secret="<application-secret>",
-    endpoint_callback=my_endpoint_callback,
+    message_handler=my_message_handler,
 )
 rpc_server.consume_messages()

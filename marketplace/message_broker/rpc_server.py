@@ -1,35 +1,30 @@
-import base64
 import json
 import logging
 
 import pika
 
-from .models.request_message import RequestMessage
+from .models.message_broker import MessageBrokerRequestModel
 from .utils import calc_queue_name
 
 logger = logging.getLogger(__name__)
 
 
 class RpcServer:
-    def __init__(self, host, application_id, application_secret, endpoint_callback):
+    def __init__(self, host, application_id, application_secret, message_handler):
         self.queue_name = calc_queue_name(application_id, application_secret)
-        self.endpoint_callback = endpoint_callback
+        self.message_handler = message_handler
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
         self.channel = connection.channel()
 
-        self.channel.queue_delete(
-            queue=self.queue_name
-        )  # Delete old queue. Otherwise, first message might not be consumed.
         self.channel.queue_declare(queue=self.queue_name)
 
     def consume_messages(self):
         def callback(ch, method, properties, body):
-            message = RequestMessage.parse_obj(json.loads(body.decode()))
-            logger.info("Messaged received for endpoint %s" % message.endpoint)
-            body_str = base64.b64decode(message.body_base64)
-            message.body = json.loads(body_str) if body_str else None
+            request_message = MessageBrokerRequestModel.parse_obj(
+                json.loads(body.decode())
+            )
 
-            response = self.endpoint_callback(message)
+            response_message = self.message_handler(request_message)
 
             ch.basic_publish(
                 exchange="",
@@ -37,7 +32,7 @@ class RpcServer:
                 properties=pika.BasicProperties(
                     correlation_id=properties.correlation_id,
                 ),
-                body=response.json(),
+                body=response_message.json(),
             )
             ch.basic_ack(delivery_tag=method.delivery_tag)
 

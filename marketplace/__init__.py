@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Software Development Toolkit to communicate with the Materials MarketPlace
 platform.

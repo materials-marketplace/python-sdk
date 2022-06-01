@@ -1,10 +1,10 @@
 import json
 
-# TODO Replace local import of message broker models with GitHub ones
-from marketplace.message_broker.models.message_broker import (
+from marketplace_standard_app_api.models.message_broker import (
     MessageBrokerRequestModel,
     MessageBrokerResponseModel,
 )
+
 from marketplace.message_broker.rpc_server import RpcServer
 
 

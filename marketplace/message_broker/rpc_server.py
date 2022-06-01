@@ -2,9 +2,8 @@ import json
 import logging
 
 import pika
+from marketplace_standard_app_api.models.message_broker import MessageBrokerRequestModel
 
-# TODO Replace local import of message broker models with GitHub ones
-from .models.message_broker import MessageBrokerRequestModel
 from .utils import calc_queue_name
 
 logger = logging.getLogger(__name__)

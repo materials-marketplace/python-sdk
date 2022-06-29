@@ -12,7 +12,7 @@ from marketplace.core import MarketPlaceClient
 class DataSinkApp(MarketPlaceClient):
     """General data sink app with all the supported capabilities."""
 
-    @check_capability_availability
+    @check_capability_availability()
     def create_dataset(self, config: Dict) -> str:
         """Store a dataset.
 
@@ -24,7 +24,7 @@ class DataSinkApp(MarketPlaceClient):
         """
         return self.post(path="createDataset", json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def create_cuds_dataset(self, config: Dict) -> Union[Dict, str]:
         """Store a CUDS dataset
         Args:
@@ -35,7 +35,7 @@ class DataSinkApp(MarketPlaceClient):
         """
         return self.post(path="createCudsDataset", json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def create_collection(self, config: Dict) -> str:
         """Create a collection (used for workflows).
 
@@ -44,7 +44,7 @@ class DataSinkApp(MarketPlaceClient):
         """
         return self.post(path="createCollection", json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def create_dataset_from_URI(self, uri: str) -> str:
         """Store a dataset by fetching the data from a URI.
 
@@ -56,7 +56,7 @@ class DataSinkApp(MarketPlaceClient):
         """
         return self.post(path="createDatasetFromURI", data=uri).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def update_dataset(self, resourceId: str, config: Dict, **kwargs) -> str:
         """Upload a new dataset to replace an existing one.
 
@@ -70,7 +70,7 @@ class DataSinkApp(MarketPlaceClient):
         params = {"resourceId": resourceId, **kwargs}
         return self.put(path="updateDataset", params=params, json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def update_cuds_dataset(self, resourceId: str, config: Dict, **kwargs) -> str:
         """Upload a new CUDS dataset to replace an existing one.
 
@@ -84,7 +84,7 @@ class DataSinkApp(MarketPlaceClient):
         params = {"resourceId": resourceId, **kwargs}
         return self.put(path="updateCudsDatset", params=params, json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def update_dataset_from_URI(self, resourceId: str, uri: str, **kwargs) -> str:
         """Update a dataset by fetching the data from a URI.
 
@@ -98,7 +98,7 @@ class DataSinkApp(MarketPlaceClient):
         params = {"resourceId": resourceId, **kwargs}
         return self.post(path="updateDatasetFromURI", params=params, data=uri).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def delete_dataset(self, resourceId: str, **kwargs) -> str:
         """Delete a dataset.
 
@@ -110,7 +110,7 @@ class DataSinkApp(MarketPlaceClient):
         params = {"resourceId": resourceId, **kwargs}
         return self.delete(path="deleteDataset", params=params).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def delete_cuds_dataset(self, resourceId: str, **kwargs) -> str:
         """Delete a CUDS dataset.
 

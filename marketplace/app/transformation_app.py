@@ -14,7 +14,7 @@ from marketplace.core import MarketPlaceClient
 class TransformationApp(MarketPlaceClient):
     """General transformation app with all the supported capabilities."""
 
-    @check_capability_availability
+    @check_capability_availability()
     def new_transformation(self, config: Dict) -> str:
         """Set up  a new transformation.
 
@@ -26,7 +26,7 @@ class TransformationApp(MarketPlaceClient):
         """
         return self.post(path="newTransformation", json=config).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def start_transformation(self, transformation_id: str, **kwargs) -> str:
         """Start a configured transformation.
 
@@ -39,7 +39,7 @@ class TransformationApp(MarketPlaceClient):
         params = {"transformationId": transformation_id, **kwargs}
         return self.post(path="startTransformation", params=params).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def stop_transformation(self, transformation_id: str, **kwargs) -> str:
         """Stop a running transformation.
 
@@ -52,7 +52,7 @@ class TransformationApp(MarketPlaceClient):
         params = {"transformationId": transformation_id, **kwargs}
         return self.post(path="stopTransformation", params=params).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def delete_transformation(self, transformation_id: str, **kwargs) -> str:
         """Delete a running transformation.
 
@@ -65,7 +65,7 @@ class TransformationApp(MarketPlaceClient):
         params = {"transformationId": transformation_id, **kwargs}
         return self.post(path="deleteTransformation", params=params).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def get_transformation_status(self, transformation_id: str, **kwargs) -> str:
         """Get the status of a certain transformation.
 
@@ -78,7 +78,7 @@ class TransformationApp(MarketPlaceClient):
         params = {"transformationId": transformation_id, **kwargs}
         return self.get(path="getTransformationStatus", params=params).text
 
-    @check_capability_availability
+    @check_capability_availability()
     def get_transformation_list(self) -> List[str]:
         """List all the existing transformations.
 

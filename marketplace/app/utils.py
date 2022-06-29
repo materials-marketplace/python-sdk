@@ -4,8 +4,8 @@
 .. moduleauthor:: Pablo de Andres, Pranjali Singh (Fraunhofer IWM)
 """
 
-import re
 import functools
+import re
 
 
 def check_capability_availability(capability=None):
@@ -14,17 +14,21 @@ def check_capability_availability(capability=None):
     Args:
         capability (str): capability that should be in capabilities
     """
+
     def decorator_check(func):
         @functools.wraps(func)
         def wrapper(instance, *args, **kwargs):
             if not capability:
-                capability = func.__name__
-                
-            if capability not in instance.capabilities:
+                capability_str = func.__name__
+            else:
+                capability_str = capability
+
+            if capability_str not in instance.capabilities:
                 raise NotImplementedError("The app does not support this capability.")
             return func(instance, *args, **kwargs)
 
         return wrapper
+
     return decorator_check
 
 

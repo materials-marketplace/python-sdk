@@ -1,7 +1,6 @@
 """This module contains all functionality interacting with hpc apps.
 """
 import ast
-from typing import Dict, List, Union
 
 from marketplace.app.utils import check_capability_availability
 from marketplace.core import MarketPlaceClient

@@ -20,6 +20,7 @@ class HPPApp(MarketPlaceClient):
                 files={"file": fh},
             )
 
+    @check_capability_availability("getDataset")
     def download(self, resourceid, filename) -> str:
         """download file from `resourceid`
         return str of content"""
@@ -31,14 +32,16 @@ class HPPApp(MarketPlaceClient):
 
         return resp.text
 
+    @check_capability_availability("deleteDataset")
     def delete(self, resourceid, filename):
         resp = self.delete(
-            path="delateDataset",
+            path="deleteDataset",
             params={"resourceid": f"{resourceid}"},
             json={"filename": filename},
         )
         return resp.text
 
+    @check_capability_availability("newTransformation")
     def new_job(self, config=None):
         """Create a new job
 
@@ -49,10 +52,12 @@ class HPPApp(MarketPlaceClient):
 
         return resp["resourceid"]
 
+    @check_capability_availability("getTranspormationList")
     def list_job(self):
         """List the jobs"""
         return self.get(path="getTransformationList").json()
 
+    @check_capability_availability("startTransformation")
     def run_job(self, resourceid):
         """submit job in the path `resourceid`
         It actually execute sbatch submit.sh in remote
@@ -64,6 +69,7 @@ class HPPApp(MarketPlaceClient):
 
         return resp.text
 
+    @check_capability_availability("stopTransformation")
     def cancel_job(self, resourceid):
         """cancel a job"""
         resp = self.post(
@@ -72,6 +78,7 @@ class HPPApp(MarketPlaceClient):
 
         return resp.text
 
+    @check_capability_availability("deleteTransformation")
     def delete_job(self, resourceid):
         """delete job corresponded to path `resourceid`
         It actually drop entity from DB.

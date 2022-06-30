@@ -8,28 +8,30 @@ import functools
 import re
 
 
-def check_capability_availability(capability=None):
+def check_capability_availability(func_or_str, capability=None):
     """Decorator for checking that a certain app supports a given capability.
 
     Args:
         capability (str): capability that should be in capabilities
     """
+    if callable(func_or_str):
+        # get a func
+        func = func_or_str
 
-    def decorator_check(func):
         @functools.wraps(func)
         def wrapper(instance, *args, **kwargs):
-            if not capability:
-                capability_str = func.__name__
-            else:
-                capability_str = capability
+            _capability = capability or func.__name__
 
-            if capability_str not in instance.capabilities:
+            if _capability not in instance.capabilities:
                 raise NotImplementedError("The app does not support this capability.")
             return func(instance, *args, **kwargs)
 
         return wrapper
 
-    return decorator_check
+    elif isinstance(func, str):
+        # get a str for capability
+        _capability = func_or_str
+        return functools.partial(check_capability_availability, capability=_capability)
 
 
 def camel_to_snake(name):

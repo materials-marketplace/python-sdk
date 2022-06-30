@@ -39,7 +39,7 @@ class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp):
         for capability in capability_info:
             self.capabilities.append(camel_to_snake(capability["name"]))
 
-    @check_capability_availability()
+    @check_capability_availability
     def heartbeat(self) -> str:
         """Check the heartbeat of the application.
 

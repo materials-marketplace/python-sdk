@@ -6,7 +6,7 @@ from marketplace.app.utils import check_capability_availability
 from marketplace.core import MarketPlaceClient
 
 
-class HPPApp(MarketPlaceClient):
+class HpcGatewayApp(MarketPlaceClient):
     """General HPC gateway app with all the supported capabilities."""
 
     @check_capability_availability("updateDataset")

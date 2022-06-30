@@ -23,12 +23,14 @@ def check_capability_availability(func_or_str, capability=None):
             _capability = capability or func.__name__
 
             if _capability not in instance.capabilities:
+                print("capa: ", _capability)
+                print("list cap: ", instance.capabilities)
                 raise NotImplementedError("The app does not support this capability.")
             return func(instance, *args, **kwargs)
 
         return wrapper
 
-    elif isinstance(func, str):
+    elif isinstance(func_or_str, str):
         # get a str for capability
         _capability = func_or_str
         return functools.partial(check_capability_availability, capability=_capability)

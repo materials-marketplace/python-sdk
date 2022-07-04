@@ -50,7 +50,7 @@ class MarketPlaceClient:
         kwargs.setdefault("headers", {}).update(self.default_headers)
         full_url = urljoin(self.marketplace_host_url, path)
         response = op(url=full_url, **kwargs)
-        if response.status_code != 200:
+        if response.status_code >= 300:
             message = (
                 f"Querying MarketPlace for {full_url} returned {response.status_code} "
                 f"because: {response.text}."

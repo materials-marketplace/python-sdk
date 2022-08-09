@@ -2,8 +2,9 @@
 """
 import ast
 
-from marketplace.app.utils import check_capability_availability
-from marketplace.core import MarketPlaceClient
+from marketplace.client import MarketPlaceClient
+
+from .utils import check_capability_availability
 
 
 class HpcGatewayApp(MarketPlaceClient):

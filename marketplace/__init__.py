@@ -7,7 +7,7 @@ platform.
 .. moduleauthor:: Carl Simon Adorf <simon.adorf@epfl.ch>
 """
 
-from .core import MarketPlaceClient
+from .client import MarketPlaceClient
 from .version import __version__
 
 __all__ = [

@@ -8,7 +8,7 @@ from typing import Dict, List, Union
 
 from marketplace.client import MarketPlaceClient
 
-from .utils import check_capability_availability
+from ..utils import check_capability_availability
 
 
 class DataSourceApp(MarketPlaceClient):

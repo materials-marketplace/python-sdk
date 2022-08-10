@@ -7,7 +7,7 @@ from typing import Dict, Union
 
 from marketplace.client import MarketPlaceClient
 
-from .utils import check_capability_availability
+from ..utils import check_capability_availability
 
 
 class DataSinkApp(MarketPlaceClient):

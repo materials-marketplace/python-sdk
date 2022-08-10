@@ -9,7 +9,7 @@ from typing import Dict, List
 
 from marketplace.client import MarketPlaceClient
 
-from .utils import check_capability_availability
+from ..utils import check_capability_availability
 
 
 class TransformationApp(MarketPlaceClient):

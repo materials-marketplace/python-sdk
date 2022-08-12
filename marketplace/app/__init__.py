@@ -38,7 +38,7 @@ def get_app(app_id, marketplace_host_url=None, access_token=None, **kwargs):
 
     app_service_path = f"application-service/applications/{app_id}"
     response = client.get(path=app_service_path).json()
-    app_api_version = response["api_version"]
+    app_api_version = parse(response["api_version"])
 
     capabilities = []
     for capability in response["capabilities"]:
@@ -53,7 +53,7 @@ def get_app(app_id, marketplace_host_url=None, access_token=None, **kwargs):
             **kwargs,
         )
     elif parse("0.0.1") < app_api_version <= parse("0.3.0"):
-        return _MarketPlaceApp_v0(client, app_id, capabilities, **kwargs)
+        return _MarketPlaceApp_v0(client, capabilities, **kwargs)
     else:
         raise RuntimeError(f"App API version ({app_api_version}) not supported.")
 

@@ -45,6 +45,22 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
             "deleteTransformation", params={"transformation_id": transformation_id}
         )
 
+    @check_capability_availability("update_transformation")
+    def __update_transformation(
+        self,
+        transformation_id: transformation.TransformationId,
+        update: transformation.TransformationUpdateModel,
+    ) -> transformation.TransformationUpdateResponse:
+        return transformation.TransformationUpdateResponse.parse_obj(
+            json.loads(
+                self._client.patch(
+                    "updateTransformation",
+                    params={"transformation_id": transformation_id},
+                    json=update,
+                )
+            )
+        )
+
     def start_transformation(
         self, transformation_id: transformation.TransformationId
     ) -> transformation.TransformationStateResponse:
@@ -54,7 +70,7 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
             )
         )
         update_response: transformation.TransformationUpdateResponse = (
-            self.update_transformation(
+            self.__update_transformation(
                 transformation_id=transformation_id, update=update
             )
         )
@@ -69,28 +85,11 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
             )
         )
         update_response: transformation.TransformationUpdateResponse = (
-            self.update_transformation(
+            self.__update_transformation(
                 transformation_id=transformation_id, update=update
             )
         )
         return transformation.TransformationStateResponse(update_response.dict())
-
-    # TODO: make this private?
-    @check_capability_availability
-    def update_transformation(
-        self,
-        transformation_id: transformation.TransformationId,
-        update: transformation.TransformationUpdateModel,
-    ) -> transformation.TransformationUpdateResponse:
-        return transformation.TransformationUpdateResponse.parse_obj(
-            json.loads(
-                self._client.patch(
-                    "updateTransformation",
-                    params={"transformation_id": transformation_id},
-                    json=update,
-                )
-            )
-        )
 
     @check_capability_availability
     def get_transformation_state(

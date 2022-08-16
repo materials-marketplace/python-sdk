@@ -99,13 +99,13 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         params = {"collection_name": collection_name}
         if dataset_name:
             params.update({"dataset_name": dataset_name})
-        return object_storage.DatasetCreateResponse(
-            **self._client.put(
+        return object_storage.DatasetCreateResponse.parse_obj(
+            json.loads(self._client.put(
                 "createDataset",
                 params=params,
                 headers=self.__encode_metadata(metadata),
                 data=file.file,
-            )
+            ))
         )
 
     # TODO: POST or PUT. as headers or in the body?

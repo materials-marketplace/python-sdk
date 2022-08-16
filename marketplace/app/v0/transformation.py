@@ -1,6 +1,6 @@
 import json
 
-import marketplace_standard_app_api.models.transformation as TransformationModel
+import marketplace_standard_app_api.models.transformation as transformation
 
 from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
@@ -10,55 +10,97 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
     @check_capability_availability
     def get_transformation_list(
         self, limit: int = 100, offset: int = 0
-    ) -> TransformationModel.TransformationListResponse:
-        params = {"limit": limit, "offset": offset}
-        return TransformationModel.TransformationListResponse.parse_obj(
-            json.loads(self._client.get("getTransformationList", params=params))
+    ) -> transformation.TransformationListResponse:
+        return transformation.TransformationListResponse.parse_obj(
+            json.loads(
+                self._client.get(
+                    "getTransformationList", params={"limit": limit, "offset": offset}
+                )
+            )
         )
 
     @check_capability_availability
     def new_transformation(
-        self, transformation: TransformationModel.NewTransformationModel
-    ) -> TransformationModel.TransformationCreateResponse:
-        return TransformationModel.TransformationCreateResponse.parse_obj(
-            json.loads(self._client.post("newTransformation", json=transformation))
+        self, new_transformation: transformation.NewTransformationModel
+    ) -> transformation.TransformationCreateResponse:
+        return transformation.TransformationCreateResponse.parse_obj(
+            json.loads(self._client.post("newTransformation", json=new_transformation))
         )
 
     @check_capability_availability
     def get_transformation(
-        self, transformation_id: TransformationModel.TransformationId
-    ) -> TransformationModel.TransformationModel:
-        params = {"transformation_id": transformation_id}
-        return TransformationModel.TransformationModel.parse_obj(
-            json.loads(self._client.get("getTransformation", params=params))
+        self, transformation_id: transformation.TransformationId
+    ) -> transformation.TransformationModel:
+        return transformation.TransformationModel.parse_obj(
+            json.loads(
+                self._client.get(
+                    "getTransformation", params={"transformation_id": transformation_id}
+                )
+            )
         )
 
     @check_capability_availability
-    def delete_transformation(
-        self, transformation_id: TransformationModel.TransformationId
-    ):
-        params = {"transformation_id": transformation_id}
-        return self._client.delete("deleteTransformation", params=params)
+    def delete_transformation(self, transformation_id: transformation.TransformationId):
+        return self._client.delete(
+            "deleteTransformation", params={"transformation_id": transformation_id}
+        )
 
-    # TODO: check request type (in standard app api its patch)
+    def start_transformation(
+        self, transformation_id: transformation.TransformationId
+    ) -> transformation.TransformationStateResponse:
+        update: transformation.TransformationUpdateModel = (
+            transformation.TransformationUpdateModel.parse_obj(
+                {"state": transformation.TransformationState.RUNNING}
+            )
+        )
+        update_response: transformation.TransformationUpdateResponse = (
+            self.update_transformation(
+                transformation_id=transformation_id, update=update
+            )
+        )
+        return transformation.TransformationStateResponse(update_response.dict())
+
+    def stop_transformation(
+        self, transformation_id: transformation.TransformationId
+    ) -> transformation.TransformationStateResponse:
+        update: transformation.TransformationUpdateModel = (
+            transformation.TransformationUpdateModel.parse_obj(
+                {"state": transformation.TransformationState.STOPPED}
+            )
+        )
+        update_response: transformation.TransformationUpdateResponse = (
+            self.update_transformation(
+                transformation_id=transformation_id, update=update
+            )
+        )
+        return transformation.TransformationStateResponse(update_response.dict())
+
+    # TODO: make this private?
     @check_capability_availability
     def update_transformation(
         self,
-        transformation_id: TransformationModel.TransformationId,
-        update: TransformationModel.TransformationUpdateModel,
-    ) -> TransformationModel.TransformationUpdateResponse:
-        params = {"transformation_id": transformation_id}
-        return TransformationModel.TransformationUpdateResponse.parse_obj(
+        transformation_id: transformation.TransformationId,
+        update: transformation.TransformationUpdateModel,
+    ) -> transformation.TransformationUpdateResponse:
+        return transformation.TransformationUpdateResponse.parse_obj(
             json.loads(
-                self._client.put("updateTransformation", params=params, json=update)
+                self._client.patch(
+                    "updateTransformation",
+                    params={"transformation_id": transformation_id},
+                    json=update,
+                )
             )
         )
 
     @check_capability_availability
     def get_transformation_state(
-        self, transformation_id: TransformationModel.TransformationId
-    ) -> TransformationModel.TransformationStateResponse:
-        params = {"transformation_id": transformation_id}
-        return TransformationModel.TransformationStateResponse.parse_obj(
-            json.loads(self._client.get("getTransformationState", params=params))
-        )
+        self, transformation_id: transformation.TransformationId
+    ) -> transformation.TransformationState:
+        return transformation.TransformationStateResponse.parse_obj(
+            json.loads(
+                self._client.get(
+                    "getTransformationState",
+                    params={"transformation_id": transformation_id},
+                )
+            )
+        ).state

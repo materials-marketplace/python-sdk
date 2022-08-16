@@ -70,3 +70,9 @@ class MarketPlaceClient:
 
     def delete(self, path: str, **kwargs):
         return self._request(requests.delete, path, **kwargs)
+
+    def head(self, path: str, **kwargs):
+        return self._request(requests.head, path, **kwargs)
+
+    def patch(self, path: str, **kwargs):
+        return self._request(requests.patch, path, **kwargs)

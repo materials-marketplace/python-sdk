@@ -22,11 +22,14 @@ class _MarketPlaceAppBase:
     def heartbeat(self) -> HTMLResponse:
         return self._client.get(path="heartbeat")
 
-    # TODO: is this correct way to pass quey parameters?
     @check_capability_availability
     def global_search(
         self, q: str, limit: int = 100, offset: int = 0
     ) -> GlobalSearchResponse:
         return GlobalSearchResponse.parse_obj(
-            json.loads(self._client.get("globalSearch", params={"q": q}))
+            json.loads(
+                self._client.get(
+                    "globalSearch", params={"q": q, "limit": limit, "offset": offset}
+                )
+            )
         )

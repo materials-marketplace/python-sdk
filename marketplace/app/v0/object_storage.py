@@ -1,27 +1,14 @@
 import json
-import re
 
 import marketplace_standard_app_api.models.object_storage as object_storage
 from fastapi import UploadFile
 
 from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
+from .utils import _decode_metadata, _encode_metadata
 
 
 class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
-    def __encode_metadata(self, metadata: dict = None) -> dict:
-        return {
-            f"X-Object-Meta-{name}": json.dumps(value)
-            for name, value in metadata.items()
-        }
-
-    def __decode_metadata(self, headers: dict = None) -> dict:
-        return {
-            re.sub(r"^X-Object-Meta-", "", name): json.loads(value)
-            for name, value in headers.items()
-            if str(name).startswith("X-Object-Meta-")
-        }
-
     @check_capability_availability
     def list_collections(
         self, limit: int = 100, offset: int = 0
@@ -59,7 +46,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return self._client.put(
             "createOrUpdateCollection",
             params={"collection_name": collection_name} if collection_name else {},
-            headers=self.__encode_metadata(metadata),
+            headers=_encode_metadata(metadata),
         ).json()
 
     @check_capability_availability
@@ -74,7 +61,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         response_headers: dict = self._client.head(
             "getCollectionMetadata", params={"collection_name": collection_name}
         ).headers
-        return json.dumps(self.__decode_metadata(headers=response_headers))
+        return json.dumps(_decode_metadata(headers=response_headers))
 
     @check_capability_availability
     def create_collection(
@@ -85,7 +72,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return self._client.put(
             "createCollection",
             params={"collection_name": collection_name} if collection_name else {},
-            headers=self.__encode_metadata(metadata),
+            headers=_encode_metadata(metadata),
         ).json()
 
     @check_capability_availability
@@ -104,13 +91,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
                 self._client.put(
                     "createDataset",
                     params=params,
-                    headers=self.__encode_metadata(metadata),
+                    headers=_encode_metadata(metadata),
                     data=file.file,
                 )
             )
         )
 
-    # TODO: POST or PUT. as headers or in the body?
     @check_capability_availability
     def create_dataset_metadata(
         self,
@@ -124,7 +110,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return self._client.post(
             "createDatasetMetadata",
             params=params,
-            headers=self.__encode_metadata(metadata),
+            headers=_encode_metadata(metadata),
         )
 
     @check_capability_availability
@@ -152,12 +138,11 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             **self._client.put(
                 "createOrReplaceDataset",
                 params=params,
-                headers=self.__encode_metadata(metadata),
+                headers=_encode_metadata(metadata),
                 data=file.file,
             )
         )
 
-    # TODO: in header or in request body?
     @check_capability_availability
     def create_or_replace_dataset_metadata(
         self,
@@ -168,7 +153,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return self._client.put(
             "createOrReplaceDatasetMetadata",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
-            headers=self.__encode_metadata(metadata),
+            headers=_encode_metadata(metadata),
         )
 
     @check_capability_availability
@@ -193,7 +178,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             "getDatasetMetadata",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
         ).headers
-        return json.dumps(self.__decode_metadata(headers=response_headers))
+        return json.dumps(_decode_metadata(headers=response_headers))
 
     @check_capability_availability
     def list_semantic_mappings(

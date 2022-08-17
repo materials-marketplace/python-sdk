@@ -46,7 +46,7 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         )
 
     @check_capability_availability("update_transformation")
-    def __update_transformation(
+    def _update_transformation(
         self,
         transformation_id: transformation.TransformationId,
         update: transformation.TransformationUpdateModel,
@@ -65,31 +65,35 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, transformation_id: transformation.TransformationId
     ) -> transformation.TransformationStateResponse:
         update: transformation.TransformationUpdateModel = (
-            transformation.TransformationUpdateModel.parse_obj(
-                {"state": transformation.TransformationState.RUNNING}
+            transformation.TransformationUpdateModel(
+                state=transformation.TransformationState.RUNNING
             )
         )
         update_response: transformation.TransformationUpdateResponse = (
-            self.__update_transformation(
+            self._update_transformation(
                 transformation_id=transformation_id, update=update
             )
         )
-        return transformation.TransformationStateResponse(update_response.dict())
+        return transformation.TransformationStateResponse.parse_obj(
+            update_response.dict()
+        )
 
     def stop_transformation(
         self, transformation_id: transformation.TransformationId
     ) -> transformation.TransformationStateResponse:
         update: transformation.TransformationUpdateModel = (
-            transformation.TransformationUpdateModel.parse_obj(
-                {"state": transformation.TransformationState.STOPPED}
+            transformation.TransformationUpdateModel(
+                state=transformation.TransformationState.STOPPED
             )
         )
         update_response: transformation.TransformationUpdateResponse = (
-            self.__update_transformation(
+            self._update_transformation(
                 transformation_id=transformation_id, update=update
             )
         )
-        return transformation.TransformationStateResponse(update_response.dict())
+        return transformation.TransformationStateResponse.parse_obj(
+            update_response.dict()
+        )
 
     @check_capability_availability
     def get_transformation_state(

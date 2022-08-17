@@ -40,12 +40,10 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         )
 
     @check_capability_availability
-    def delete_transformation(
-        self, transformation_id: transformation.TransformationId
-    ) -> str:
-        return self._client.delete(
+    def delete_transformation(self, transformation_id: transformation.TransformationId):
+        self._client.delete(
             "deleteTransformation", params={"transformation_id": transformation_id}
-        ).text
+        )
 
     @check_capability_availability("update_transformation")
     def _update_transformation(

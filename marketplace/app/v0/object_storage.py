@@ -51,10 +51,10 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         ).text
 
     @check_capability_availability
-    def delete_collection(self, collection_name: object_storage.CollectionName) -> str:
-        return self._client.delete(
+    def delete_collection(self, collection_name: object_storage.CollectionName):
+        self._client.delete(
             "deleteCollection", params={"collection_name": collection_name}
-        ).text
+        )
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
@@ -164,11 +164,11 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ) -> str:
-        return self._client.delete(
+    ):
+        self._client.delete(
             "deleteDataset",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
-        ).text
+        )
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability

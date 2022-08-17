@@ -1,4 +1,5 @@
 import json
+from typing import Dict, Union
 
 import marketplace_standard_app_api.models.object_storage as object_storage
 from fastapi import UploadFile
@@ -42,22 +43,24 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         metadata: dict = None,
         collection_name: object_storage.CollectionName = None,
-    ):
+    ) -> str:
         return self._client.put(
             "createOrUpdateCollection",
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
-        ).json()
+        ).text
 
     @check_capability_availability
-    def delete_collection(self, collection_name: object_storage.CollectionName):
+    def delete_collection(self, collection_name: object_storage.CollectionName) -> str:
         return self._client.delete(
             "deleteCollection", params={"collection_name": collection_name}
-        ).json()
+        ).text
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
-    def get_collection_metadata(self, collection_name: object_storage.CollectionName):
+    def get_collection_metadata(
+        self, collection_name: object_storage.CollectionName
+    ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
             "getCollectionMetadata", params={"collection_name": collection_name}
         ).headers
@@ -68,12 +71,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName = None,
         metadata: dict = None,
-    ):
+    ) -> str:
         return self._client.put(
             "createCollection",
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
-        ).json()
+        ).text
 
     @check_capability_availability
     def create_dataset(
@@ -103,7 +106,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
-    ):
+    ) -> str:
         params = {"collection_name": collection_name}
         if dataset_name:
             params.update({"dataset_name": dataset_name})
@@ -111,14 +114,14 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             "createDatasetMetadata",
             params=params,
             headers=_encode_metadata(metadata),
-        )
+        ).text
 
     @check_capability_availability
     def get_dataset(
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ):
+    ) -> Union[Dict, str]:
         return self._client.get(
             "getDataset",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
@@ -149,23 +152,23 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
         metadata: dict = None,
-    ):
+    ) -> str:
         return self._client.put(
             "createOrReplaceDatasetMetadata",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
             headers=_encode_metadata(metadata),
-        )
+        ).text
 
     @check_capability_availability
     def delete_dataset(
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ):
+    ) -> str:
         return self._client.delete(
             "deleteDataset",
             params={"collection_name": collection_name, "dataset_name": dataset_name},
-        ).json()
+        ).text
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
@@ -173,7 +176,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ):
+    ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
             "getDatasetMetadata",
             params={"collection_name": collection_name, "dataset_name": dataset_name},

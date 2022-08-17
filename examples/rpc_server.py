@@ -11,7 +11,9 @@ from marketplace.message_broker.rpc_server import RpcServer
 def my_message_handler(
     request_message: MessageBrokerRequestModel,
 ) -> MessageBrokerResponseModel:
-    print("Routing to endpoint %r..." % request_message.endpoint)
+    print(
+        f"Routing to endpoint {request_message.endpoint} for method {request_message.method}..."
+    )
     payload = json.loads(request_message.body) if request_message.body else {}
     result = len(payload)
     response = {"numberOfKeysInPayload": str(result)}

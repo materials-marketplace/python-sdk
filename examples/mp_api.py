@@ -2,7 +2,7 @@
 from pprint import pprint
 
 from marketplace.app.marketplace_app import MarketPlaceApp
-from marketplace.core import MarketPlaceClient
+from marketplace.client import MarketPlaceClient
 
 # General MarketPlaceClient for simple requests like user info
 # Remember to save your access token in an environment variable with

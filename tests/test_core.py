@@ -6,7 +6,7 @@
 """
 import pytest
 
-from marketplace.core import MarketPlaceClient
+from marketplace.client import MarketPlaceClient
 
 
 @pytest.fixture

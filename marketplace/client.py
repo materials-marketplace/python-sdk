@@ -9,6 +9,7 @@ import os
 from urllib.parse import urljoin
 
 import requests
+from requests import Response
 
 from .version import __version__
 
@@ -49,7 +50,7 @@ class MarketPlaceClient:
     def _request(self, op, path, **kwargs):
         kwargs.setdefault("headers", {}).update(self.default_headers)
         full_url = urljoin(self.marketplace_host_url, path)
-        response = op(url=full_url, **kwargs)
+        response: Response = op(url=full_url, **kwargs)
         if response.status_code >= 300:
             message = (
                 f"Querying MarketPlace for {full_url} returned {response.status_code} "
@@ -70,3 +71,9 @@ class MarketPlaceClient:
 
     def delete(self, path: str, **kwargs):
         return self._request(requests.delete, path, **kwargs)
+
+    def head(self, path: str, **kwargs):
+        return self._request(requests.head, path, **kwargs)
+
+    def patch(self, path: str, **kwargs):
+        return self._request(requests.patch, path, **kwargs)

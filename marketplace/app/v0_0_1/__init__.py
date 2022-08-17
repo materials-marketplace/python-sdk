@@ -7,11 +7,11 @@
 
 from urllib.parse import urljoin
 
-from marketplace.app.data_sink_app import DataSinkApp
-from marketplace.app.data_source_app import DataSourceApp
-from marketplace.app.hpc_app import HpcGatewayApp
-from marketplace.app.transformation_app import TransformationApp
-from marketplace.app.utils import camel_to_snake, check_capability_availability
+from ..utils import camel_to_snake, check_capability_availability
+from .data_sink_app import DataSinkApp
+from .data_source_app import DataSourceApp
+from .hpc_app import HpcGatewayApp
+from .transformation_app import TransformationApp
 
 
 class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayApp):
@@ -21,11 +21,11 @@ class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayAp
     to use the authentication mechanism.
     """
 
-    def __init__(self, client_id, **kwargs):
+    def __init__(self, client_id, capabilities: list = None, **kwargs):
         super().__init__(**kwargs)
         self.client_id = client_id
         # Must be run before the marketplace_host_url is updated to include the proxy.
-        self.set_capabilities()
+        self.capabilities = capabilities or self.set_capabilities()
         self.marketplace_host_url = urljoin(
             self.marketplace_host_url, f"mp-api/proxy/{self.client_id}/"
         )

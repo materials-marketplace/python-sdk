@@ -47,18 +47,10 @@ class MarketPlaceClient:
         userinfo.raise_for_status()
         return userinfo.json()
 
-    def _request(self, op, path, **kwargs):
+    def _request(self, op, path, **kwargs) -> Response:
         kwargs.setdefault("headers", {}).update(self.default_headers)
         full_url = urljoin(self.marketplace_host_url, path)
-        response: Response = op(url=full_url, **kwargs)
-        if response.status_code >= 300:
-            message = (
-                f"Querying MarketPlace for {full_url} returned {response.status_code} "
-                f"because: {response.text}."
-                "Please check the host, client_id and token validity."
-            )
-            raise RuntimeError(message)
-        return response
+        return op(url=full_url, **kwargs)
 
     def get(self, path: str, **kwargs):
         return self._request(requests.get, path, **kwargs)

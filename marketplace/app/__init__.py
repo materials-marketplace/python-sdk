@@ -6,9 +6,9 @@ capabilities.
 import warnings
 
 from packaging.version import parse
-from utils import camel_to_snake
 
 from ..client import MarketPlaceClient
+from .utils import camel_to_snake
 from .v0 import MarketPlaceApp as _MarketPlaceApp_v0
 from .v0_0_1 import MarketPlaceApp as _MarketPlaceApp_v0_0_1
 

@@ -32,7 +32,7 @@ class HpcGatewayApp(MarketPlaceClient):
         return resp.text
 
     @check_capability_availability("delete_dataset")
-    def delete(self, resourceid, filename):
+    def delete_file(self, resourceid, filename):
         """Delete file from `resourceid`"""
         self.delete(
             path="deleteDataset",
@@ -48,12 +48,12 @@ class HpcGatewayApp(MarketPlaceClient):
 
         return resp["resourceid"]
 
-    @check_capability_availability("get_transpormationList")
+    @check_capability_availability("get_transformation_list")
     def list_jobs(self):
         """List the jobs"""
         return self.get(path="getTransformationList").json()
 
-    @check_capability_availability("startTransformation")
+    @check_capability_availability("start_transformation")
     def run_job(self, resourceid):
         """
         Submit job in the path `resourceid`

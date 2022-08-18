@@ -23,7 +23,9 @@ def check_capability_availability(func_or_capability, capability=None):
             _capability = capability or func.__name__
 
             if _capability not in instance.capabilities:
-                raise NotImplementedError("The app does not support this capability.")
+                raise NotImplementedError(
+                    f"The app does not support capability '{_capability}', should be one of {instance.capabilities}."
+                )
             return func(instance, *args, **kwargs)
 
         return wrapper

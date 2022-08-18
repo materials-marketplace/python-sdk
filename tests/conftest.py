@@ -7,15 +7,48 @@
 Provide fixtures for all tests.
 """
 
+import re
+from urllib.parse import urljoin
+
 import pytest
+
+from marketplace.client import MP_DEFAULT_HOST
 
 
 @pytest.fixture
-def environment(monkeypatch):
-    # Full tests will eventually require a local development deployment of the
-    # MarketPlace platform.
-    monkeypatch.setenv("MP_HOST", "https://lvh.me")
-    # For now, we are not providing a mock marketplace, all tests will
-    # therefore be runnable with empty tokens.
+def _app_service_response():
+    return {
+        "api_version": "0.3.0",
+        "capabilities": [
+            {"name": "frontend"},
+            {"name": "getObject"},
+            {"name": "heartbeat"},
+        ],
+    }
+
+
+@pytest.fixture
+def _app_service(requests_mock, _app_service_response):
+    application_service = re.compile(
+        f"{MP_DEFAULT_HOST}application-service/applications/.*"
+    )
+
+    requests_mock.get(application_service, json=_app_service_response)
+
+
+@pytest.fixture
+def _proxy_service(requests_mock):
+    proxy_path = "mp-api/proxy"
+    requests_mock.get(
+        re.compile(urljoin(MP_DEFAULT_HOST, proxy_path) + r"/.*/frontend"),
+        text="<html><body>Hello app!</body></html>",
+    )
+    requests_mock.get(
+        re.compile(urljoin(MP_DEFAULT_HOST, proxy_path) + r"/.*/heartbeat"), text="OK"
+    )
+
+
+@pytest.fixture(autouse=True)
+def environment(monkeypatch, _app_service, _proxy_service):
     monkeypatch.setenv("MP_ACCESS_TOKEN", "")
     monkeypatch.setenv("MP_REFRESH_TOKEN", "")

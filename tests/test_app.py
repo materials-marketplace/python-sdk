@@ -1,12 +1,24 @@
 import pytest
 
-from marketplace.app import MarketPlaceApp
+from marketplace.app import MarketPlaceApp, get_app
 
 
 @pytest.fixture
 def app():
-    return MarketPlaceApp()
+    return get_app("test-app")
 
 
-def test_app(app):
-    pass
+def test_app_v0_0_1():
+    with pytest.warns(UserWarning):
+        app = MarketPlaceApp(client_id="test-app", capabilities=["heartbeat"])
+    assert app.heartbeat() == "OK"
+
+
+def test_app_v0(app):
+    assert "heartbeat" in app.capabilities
+    response = app.heartbeat()
+    assert response.ok
+    assert "frontend" in app.capabilities
+    response = app.frontend()
+    assert response.ok
+    assert "Hello app!" in response.text

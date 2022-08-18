@@ -13,13 +13,16 @@ from requests import Response
 
 from .version import __version__
 
+MP_DEFAULT_HOST = "https://www.materials-marketplace.eu/"
+
 
 class MarketPlaceClient:
     """Interact with the MarketPlace platform."""
 
     def __init__(self, marketplace_host_url=None, access_token=None):
         marketplace_host_url = marketplace_host_url or os.environ.get(
-            "MP_HOST", "https://www.materials-marketplace.eu/"
+            "MP_HOST",
+            MP_DEFAULT_HOST,
         )
         access_token = access_token or os.environ["MP_ACCESS_TOKEN"]
 

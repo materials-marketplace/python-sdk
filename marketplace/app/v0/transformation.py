@@ -14,7 +14,8 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         return transformation.TransformationListResponse.parse_obj(
             json.loads(
                 self._client.get(
-                    "getTransformationList", params={"limit": limit, "offset": offset}
+                    self._proxy_path("getTransformationList"),
+                    params={"limit": limit, "offset": offset},
                 )
             )
         )
@@ -24,7 +25,11 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, new_transformation: transformation.NewTransformationModel
     ) -> transformation.TransformationCreateResponse:
         return transformation.TransformationCreateResponse.parse_obj(
-            json.loads(self._client.post("newTransformation", json=new_transformation))
+            json.loads(
+                self._client.post(
+                    self._proxy_path("newTransformation"), json=new_transformation
+                )
+            )
         )
 
     @check_capability_availability
@@ -34,7 +39,8 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         return transformation.TransformationModel.parse_obj(
             json.loads(
                 self._client.get(
-                    "getTransformation", params={"transformation_id": transformation_id}
+                    self._proxy_path("getTransformation"),
+                    params={"transformation_id": transformation_id},
                 )
             )
         )
@@ -42,7 +48,8 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
     @check_capability_availability
     def delete_transformation(self, transformation_id: transformation.TransformationId):
         self._client.delete(
-            "deleteTransformation", params={"transformation_id": transformation_id}
+            self._proxy_path("deleteTransformation"),
+            params={"transformation_id": transformation_id},
         )
 
     @check_capability_availability("update_transformation")
@@ -54,7 +61,7 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         return transformation.TransformationUpdateResponse.parse_obj(
             json.loads(
                 self._client.patch(
-                    "updateTransformation",
+                    self._proxy_path("updateTransformation"),
                     params={"transformation_id": transformation_id},
                     json=update,
                 )
@@ -102,7 +109,7 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         return transformation.TransformationStateResponse.parse_obj(
             json.loads(
                 self._client.get(
-                    "getTransformationState",
+                    self._proxy_path("getTransformationState"),
                     params={"transformation_id": transformation_id},
                 )
             )

@@ -16,7 +16,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     ) -> object_storage.CollectionListResponse:
         return object_storage.CollectionListResponse(
             **self._client.get(
-                "listCollections", params={"limit": limit, "offset": offset}
+                self._proxy_path("listCollections"),
+                params={"limit": limit, "offset": offset},
             ).json()
         )
 
@@ -29,7 +30,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     ) -> object_storage.DatasetListResponse:
         return object_storage.DatasetListResponse(
             **self._client.get(
-                "listDatasets",
+                self._proxy_path("listDatasets"),
                 params={
                     "collection_name": collection_name,
                     "limit": limit,
@@ -45,7 +46,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName = None,
     ) -> str:
         return self._client.put(
-            "createOrUpdateCollection",
+            self._proxy_path("createOrUpdateCollection"),
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
         ).text
@@ -53,7 +54,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def delete_collection(self, collection_name: object_storage.CollectionName):
         self._client.delete(
-            "deleteCollection", params={"collection_name": collection_name}
+            self._proxy_path("deleteCollection"),
+            params={"collection_name": collection_name},
         )
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
@@ -62,7 +64,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self, collection_name: object_storage.CollectionName
     ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
-            "getCollectionMetadata", params={"collection_name": collection_name}
+            self._proxy_path("getCollectionMetadata"),
+            params={"collection_name": collection_name},
         ).headers
         return json.dumps(_decode_metadata(headers=response_headers))
 
@@ -73,7 +76,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         metadata: dict = None,
     ) -> str:
         return self._client.put(
-            "createCollection",
+            self._proxy_path("createCollection"),
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
         ).text
@@ -92,7 +95,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return object_storage.DatasetCreateResponse.parse_obj(
             json.loads(
                 self._client.put(
-                    "createDataset",
+                    self._proxy_path("createDataset"),
                     params=params,
                     headers=_encode_metadata(metadata),
                     data=file.file,
@@ -111,7 +114,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         if dataset_name:
             params.update({"dataset_name": dataset_name})
         return self._client.post(
-            "createDatasetMetadata",
+            self._proxy_path("createDatasetMetadata"),
             params=params,
             headers=_encode_metadata(metadata),
         ).text
@@ -123,7 +126,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         dataset_name: object_storage.DatasetName,
     ) -> Union[Dict, str]:
         return self._client.get(
-            "getDataset",
+            self._proxy_path("getDataset"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
         ).json()
 
@@ -139,7 +142,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             params.update({"dataset_name": dataset_name})
         return object_storage.DatasetCreateResponse(
             **self._client.put(
-                "createOrReplaceDataset",
+                self._proxy_path("createOrReplaceDataset"),
                 params=params,
                 headers=_encode_metadata(metadata),
                 data=file.file,
@@ -154,7 +157,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         metadata: dict = None,
     ) -> str:
         return self._client.put(
-            "createOrReplaceDatasetMetadata",
+            self._proxy_path("createOrReplaceDatasetMetadata"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
             headers=_encode_metadata(metadata),
         ).text
@@ -166,7 +169,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         dataset_name: object_storage.DatasetName,
     ):
         self._client.delete(
-            "deleteDataset",
+            self._proxy_path("deleteDataset"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
         )
 
@@ -178,7 +181,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         dataset_name: object_storage.DatasetName,
     ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
-            "getDatasetMetadata",
+            self._proxy_path("getDatasetMetadata"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
         ).headers
         return json.dumps(_decode_metadata(headers=response_headers))
@@ -189,7 +192,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     ) -> object_storage.SemanticMappingListResponse:
         return object_storage.SemanticMappingListResponse(
             **self._client.get(
-                "listSemanticMappings", params={"limit": limit, "offset": offset}
+                self._proxy_path("listSemanticMappings"),
+                params={"limit": limit, "offset": offset},
             ).json()
         )
 
@@ -200,7 +204,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return object_storage.SemanticMappingModel.parse_obj(
             json.loads(
                 self._client.get(
-                    "getSemanticMapping",
+                    self._proxy_path("getSemanticMapping"),
                     params={"semantic_mapping_id": semantic_mapping_id},
                 )
             )

@@ -25,9 +25,9 @@ def my_message_handler(
 
 
 rpc_server = RpcServer(
-    host="www.materials-marketplace.eu",
-    application_id="<application-id>",
-    application_secret="<application-secret>",
+    host="staging.materials-marketplace.eu",
+    application_id="dc67d85e-7945-49fa-bf85-3159a8358f85",
+    application_secret="2366c94a-1361-4c85-9016-e16b1fe7dfa1",
     message_handler=my_message_handler,
 )
 rpc_server.consume_messages()

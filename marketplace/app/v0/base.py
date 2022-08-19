@@ -1,26 +1,33 @@
 import json
-from typing import List
+from urllib.parse import urljoin
 
 from fastapi.responses import HTMLResponse
 from marketplace_standard_app_api.models.system import GlobalSearchResponse
 
 from marketplace.client import MarketPlaceClient
 
-from ..utils import check_capability_availability
+from ..utils import camel_to_snake, check_capability_availability
 
 
 class _MarketPlaceAppBase:
-    def __init__(self, client: MarketPlaceClient, capabilities: List):
+    def __init__(self, client: MarketPlaceClient, app_id: str, app_info: dict):
         self._client: MarketPlaceClient = client
-        self.capabilities = capabilities  # FOR DEBUGGING
+        self.app_id: str = app_id
+        self._app_info: dict = app_info
+        self.capabilities = {
+            camel_to_snake(c["name"]) for c in app_info["capabilities"]
+        }
+
+    def _proxy_path(self, path):
+        return urljoin(f"mp-api/proxy/{self.app_id}/", path)
 
     @check_capability_availability
     def frontend(self) -> HTMLResponse:
-        return self._client.get(path="frontend")
+        return self._client.get(path=self._proxy_path("frontend"))
 
     @check_capability_availability
     def heartbeat(self) -> HTMLResponse:
-        return self._client.get(path="heartbeat")
+        return self._client.get(path=self._proxy_path("heartbeat"))
 
     @check_capability_availability
     def global_search(
@@ -29,7 +36,8 @@ class _MarketPlaceAppBase:
         return GlobalSearchResponse.parse_obj(
             json.loads(
                 self._client.get(
-                    "globalSearch", params={"q": q, "limit": limit, "offset": offset}
+                    self._proxy_path("globalSearch"),
+                    params={"q": q, "limit": limit, "offset": offset},
                 )
             )
         )

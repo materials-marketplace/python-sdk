@@ -19,7 +19,7 @@ class _MarketPlaceAppBase:
         }
 
     def _proxy_path(self, path):
-        return urljoin(f"mp-api/proxy/{self.app_id}/", path)
+        return urljoin(f"api/applications/proxy/{self.app_id}/", path)
 
     @check_capability_availability
     def frontend(self) -> HTMLResponse:

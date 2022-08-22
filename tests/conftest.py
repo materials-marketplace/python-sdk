@@ -29,9 +29,7 @@ def _app_service_response():
 
 @pytest.fixture
 def _app_service(requests_mock, _app_service_response):
-    application_service = re.compile(
-        f"{MP_DEFAULT_HOST}api/applications/.*"
-    )
+    application_service = re.compile(f"{MP_DEFAULT_HOST}api/applications/.*")
 
     requests_mock.get(application_service, json=_app_service_response)
 
@@ -45,6 +43,11 @@ def _proxy_service(requests_mock):
     )
     requests_mock.get(
         re.compile(urljoin(MP_DEFAULT_HOST, proxy_path) + r"/.*/heartbeat"), text="OK"
+    )
+    # mocking the older version
+    requests_mock.get(
+        re.compile(urljoin(MP_DEFAULT_HOST, "mp-api/proxy") + r"/.*/heartbeat"),
+        text="OK",
     )
 
 

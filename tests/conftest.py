@@ -30,7 +30,7 @@ def _app_service_response():
 @pytest.fixture
 def _app_service(requests_mock, _app_service_response):
     application_service = re.compile(
-        f"{MP_DEFAULT_HOST}application-service/applications/.*"
+        f"{MP_DEFAULT_HOST}api/applications/.*"
     )
 
     requests_mock.get(application_service, json=_app_service_response)
@@ -38,7 +38,7 @@ def _app_service(requests_mock, _app_service_response):
 
 @pytest.fixture
 def _proxy_service(requests_mock):
-    proxy_path = "mp-api/proxy"
+    proxy_path = "api/applications/proxy"
     requests_mock.get(
         re.compile(urljoin(MP_DEFAULT_HOST, proxy_path) + r"/.*/frontend"),
         text="<html><body>Hello app!</body></html>",

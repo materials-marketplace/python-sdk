@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 from urllib.parse import urljoin
 
 from fastapi.responses import HTMLResponse
@@ -10,8 +11,10 @@ from ..utils import camel_to_snake, check_capability_availability
 
 
 class _MarketPlaceAppBase:
-    def __init__(self, client: MarketPlaceClient, app_id: str, app_info: dict):
-        self._client: MarketPlaceClient = client
+    def __init__(
+        self, app_id: str, app_info: dict, client: Optional[MarketPlaceClient] = None
+    ):
+        self._client: MarketPlaceClient = client or MarketPlaceClient()
         self.app_id: str = app_id
         self._app_info: dict = app_info
         self.capabilities = {

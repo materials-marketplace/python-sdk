@@ -37,8 +37,8 @@ def get_app(app_id, marketplace_host_url=None, access_token=None, **kwargs):
     # Getting api version and list of capabilities for the application
 
     app_service_path = f"api/applications/{app_id}"
-    app_info = client.get(path=app_service_path).json()
-    app_api_version = parse(app_info["api_version"])
+    app_info: dict = client.get(path=app_service_path).json()
+    app_api_version = parse(app_info.get("api_version", "0.0.1"))
 
     capabilities = []
     for capability in app_info["capabilities"]:

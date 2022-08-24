@@ -27,13 +27,13 @@ class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayAp
         # Must be run before the marketplace_host_url is updated to include the proxy.
         self.capabilities = capabilities or self.set_capabilities()
         self.marketplace_host_url = urljoin(
-            self.marketplace_host_url, f"mp-api/proxy/{self.client_id}/"
+            self.marketplace_host_url, f"api/applications/proxy/{self.client_id}/"
         )
 
     def set_capabilities(self):
         """Query the platform to get the capabilities supported by a certain
         app."""
-        app_service_path = f"application-service/applications/{self.client_id}"
+        app_service_path = f"api/applications/{self.client_id}"
         response = self.get(path=app_service_path).json()
         capability_info = response["capabilities"]
         self.capabilities = []

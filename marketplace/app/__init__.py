@@ -7,6 +7,7 @@ import warnings
 from typing import Optional
 
 from packaging.version import parse
+from requests import Response
 
 from ..client import MarketPlaceClient
 from .utils import camel_to_snake
@@ -35,7 +36,14 @@ def get_app(app_id, client: Optional[MarketPlaceClient] = None, **kwargs):
 
     # Getting api version and list of capabilities for the application
     app_service_path = f"api/applications/{app_id}"
-    app_info: dict = client.get(path=app_service_path).json()
+    app_info_res: Response = client.get(path=app_service_path)
+    if app_info_res.status_code >= 300:
+        raise KeyError(
+            f"Querying for application with id {app_id} "
+            f"failed with code {app_info_res.status_code} "
+            f"because {app_info_res.text}"
+        )
+    app_info: dict = app_info_res.json()
     app_api_version = parse(app_info.get("api_version", "0.0.1"))
 
     capabilities = []

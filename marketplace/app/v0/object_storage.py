@@ -44,12 +44,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         metadata: dict = None,
         collection_name: object_storage.CollectionName = None,
-    ) -> str:
+    ):
         return self._client.put(
             self._proxy_path("createOrUpdateCollection"),
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
-        ).text
+        ).json()
 
     @check_capability_availability
     def delete_collection(self, collection_name: object_storage.CollectionName):
@@ -58,7 +58,6 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             params={"collection_name": collection_name},
         )
 
-    # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
     def get_collection_metadata(
         self, collection_name: object_storage.CollectionName
@@ -74,12 +73,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName = None,
         metadata: dict = None,
-    ) -> str:
+    ):
         return self._client.put(
             self._proxy_path("createCollection"),
             params={"collection_name": collection_name} if collection_name else {},
             headers=_encode_metadata(metadata),
-        ).text
+        ).json()
 
     @check_capability_availability
     def create_dataset(
@@ -107,7 +106,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
-    ) -> str:
+    ):
         params = {"collection_name": collection_name}
         if dataset_name:
             params.update({"dataset_name": dataset_name})
@@ -115,7 +114,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             self._proxy_path("createDatasetMetadata"),
             params=params,
             headers=_encode_metadata(metadata),
-        ).text
+        ).json()
 
     @check_capability_availability
     def get_dataset(
@@ -153,12 +152,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
         metadata: dict = None,
-    ) -> str:
+    ):
         return self._client.put(
             self._proxy_path("createOrReplaceDatasetMetadata"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
             headers=_encode_metadata(metadata),
-        ).text
+        ).json()
 
     @check_capability_availability
     def delete_dataset(

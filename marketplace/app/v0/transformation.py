@@ -1,5 +1,3 @@
-import json
-
 import marketplace_standard_app_api.models.transformation as transformation
 
 from ..utils import check_capability_availability
@@ -12,12 +10,10 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, limit: int = 100, offset: int = 0
     ) -> transformation.TransformationListResponse:
         return transformation.TransformationListResponse.parse_obj(
-            json.loads(
-                self._client.get(
-                    self._proxy_path("getTransformationList"),
-                    params={"limit": limit, "offset": offset},
-                )
-            )
+            self._client.get(
+                self._proxy_path("getTransformationList"),
+                params={"limit": limit, "offset": offset},
+            ).json()
         )
 
     @check_capability_availability
@@ -25,11 +21,9 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, new_transformation: transformation.NewTransformationModel
     ) -> transformation.TransformationCreateResponse:
         return transformation.TransformationCreateResponse.parse_obj(
-            json.loads(
-                self._client.post(
-                    self._proxy_path("newTransformation"), json=new_transformation
-                )
-            )
+            self._client.post(
+                self._proxy_path("newTransformation"), json=new_transformation
+            ).json()
         )
 
     @check_capability_availability
@@ -37,12 +31,10 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, transformation_id: transformation.TransformationId
     ) -> transformation.TransformationModel:
         return transformation.TransformationModel.parse_obj(
-            json.loads(
-                self._client.get(
-                    self._proxy_path("getTransformation"),
-                    params={"transformation_id": transformation_id},
-                )
-            )
+            self._client.get(
+                self._proxy_path("getTransformation"),
+                params={"transformation_id": transformation_id},
+            ).json()
         )
 
     @check_capability_availability
@@ -59,13 +51,11 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         update: transformation.TransformationUpdateModel,
     ) -> transformation.TransformationUpdateResponse:
         return transformation.TransformationUpdateResponse.parse_obj(
-            json.loads(
-                self._client.patch(
-                    self._proxy_path("updateTransformation"),
-                    params={"transformation_id": transformation_id},
-                    json=update,
-                )
-            )
+            self._client.patch(
+                self._proxy_path("updateTransformation"),
+                params={"transformation_id": transformation_id},
+                json=update,
+            ).json()
         )
 
     def start_transformation(
@@ -107,10 +97,8 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         self, transformation_id: transformation.TransformationId
     ) -> transformation.TransformationState:
         return transformation.TransformationStateResponse.parse_obj(
-            json.loads(
-                self._client.get(
-                    self._proxy_path("getTransformationState"),
-                    params={"transformation_id": transformation_id},
-                )
-            )
+            self._client.get(
+                self._proxy_path("getTransformationState"),
+                params={"transformation_id": transformation_id},
+            ).json()
         ).state

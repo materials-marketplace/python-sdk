@@ -93,14 +93,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         if dataset_name:
             params.update({"dataset_name": dataset_name})
         return object_storage.DatasetCreateResponse.parse_obj(
-            json.loads(
-                self._client.put(
-                    self._proxy_path("createDataset"),
-                    params=params,
-                    headers=_encode_metadata(metadata),
-                    data=file.file,
-                )
-            )
+            self._client.put(
+                self._proxy_path("createDataset"),
+                params=params,
+                headers=_encode_metadata(metadata),
+                data=file.file,
+            ).json()
         )
 
     @check_capability_availability
@@ -202,10 +200,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self, semantic_mapping_id: str
     ) -> object_storage.SemanticMappingModel:
         return object_storage.SemanticMappingModel.parse_obj(
-            json.loads(
-                self._client.get(
-                    self._proxy_path("getSemanticMapping"),
-                    params={"semantic_mapping_id": semantic_mapping_id},
-                )
-            )
+            self._client.get(
+                self._proxy_path("getSemanticMapping"),
+                params={"semantic_mapping_id": semantic_mapping_id},
+            ).json()
         )

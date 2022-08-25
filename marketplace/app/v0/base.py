@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 from urllib.parse import urljoin
 
@@ -37,10 +36,8 @@ class _MarketPlaceAppBase:
         self, q: str, limit: int = 100, offset: int = 0
     ) -> GlobalSearchResponse:
         return GlobalSearchResponse.parse_obj(
-            json.loads(
-                self._client.get(
-                    self._proxy_path("globalSearch"),
-                    params={"q": q, "limit": limit, "offset": offset},
-                )
-            )
+            self._client.get(
+                self._proxy_path("globalSearch"),
+                params={"q": q, "limit": limit, "offset": offset},
+            ).json()
         )

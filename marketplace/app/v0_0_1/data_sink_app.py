@@ -14,16 +14,17 @@ class DataSinkApp(MarketPlaceClient):
     """General data sink app with all the supported capabilities."""
 
     @check_capability_availability
-    def create_dataset(self, config: Dict) -> str:
+    def create_dataset(self, config: Dict, files: Dict = None) -> str:
         """Store a dataset.
 
         Args:
-            config (Dict): data payload
+            config (Dict): data metadata
+            files (Dict): binary data content
 
         Returns:
             str: resourceId of the created dataset
         """
-        return self.post(path="createDataset", json=config).text
+        return self.post(path="createDataset", data=config, files=files).text
 
     @check_capability_availability
     def create_cuds_dataset(self, config: Dict) -> Union[Dict, str]:
@@ -43,7 +44,7 @@ class DataSinkApp(MarketPlaceClient):
         Returns:
             str: response string (success/error)
         """
-        return self.post(path="createCollection", json=config).text
+        return self.post(path="createCollection", data=config).text
 
     @check_capability_availability
     def create_dataset_from_URI(self, uri: str) -> str:

@@ -15,13 +15,13 @@ class DataSourceApp(MarketPlaceClient):
     """General data source app with all the supported capabilities."""
 
     @check_capability_availability
-    def get_collection(self) -> List:
-        """Fetches list of datasets.
+    def get_collection(self, resource_id: str, **kwargs) -> List:
+        """Fetches a particular Catalog.
 
         Returns:
-            List: [list of dataset names]
+            resource_id (str): [id of Catalog]
         """
-        return self.get(path="getCollection").json()
+        return self.get(path="getCollection", params={"resourceId": resource_id, **kwargs}).text
 
     @check_capability_availability
     def get_cuds_collection(self) -> Union[Dict, str]:
@@ -44,7 +44,7 @@ class DataSourceApp(MarketPlaceClient):
         """
         return self.get(
             path="getDataset", params={"resourceId": resource_id, **kwargs}
-        ).json()
+        ).content
 
     @check_capability_availability
     def get_cuds_dataset(self, resource_id: str, **kwargs) -> Union[Dict, str]:
@@ -72,6 +72,19 @@ class DataSourceApp(MarketPlaceClient):
         return self.get(path="getMetadata", params=params).json()
 
     @check_capability_availability
+    def get_collection_metadata(self, resource_id: str, **kwargs) -> Union[Dict, str]:
+        """Execute search query on datasets.
+
+        Args:
+            resource_id (str): id of dataset to query on
+
+        Returns:
+            Dict: json response object
+        """
+        params = {"resourceId": resource_id, **kwargs}
+        return self.get(path="getCollectionMetadata", params=params).text
+
+    @check_capability_availability
     def query_dataset(self, resource_id: str, query: str, **kwargs) -> Union[Dict, str]:
         """Execute search query on datasets.
 
@@ -87,19 +100,19 @@ class DataSourceApp(MarketPlaceClient):
 
     @check_capability_availability
     def post_query_dataset(
-        self, schema_id: str, config: Dict, **kwargs
+        self, query: str, config: Dict, **kwargs
     ) -> Union[Dict, str]:
-        """Execute search query on datasets.
+        """Query a dataset(Post for GraphQL)
 
         Args:
-            schema_id (str): id of schema
-            config (Dict): json to post on schema
+            query (str): query to post
+            config (Dict): ? TO BE CONFIRMED ?
 
         Returns:
             Dict: json response
         """
-        params = {"schema_id": schema_id, **kwargs}
-        return self.post(path="postQueryDataset", params=params, json=config).json()
+        params = {"query": query, **kwargs}
+        return self.post(path="postQueryDataset", params=params, json=config).text
 
     @check_capability_availability
     def export_dataset_with_attributes(
@@ -155,4 +168,4 @@ class DataSourceApp(MarketPlaceClient):
             Dict: json response
         """
         params = {"query": query, **kwargs}
-        return self.post(path="postQueryCollection", params=params, json=config).json()
+        return self.post(path="postQueryCollection", params=params, json=config).text

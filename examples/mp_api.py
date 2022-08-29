@@ -28,7 +28,7 @@ class MyMarketPlaceApp(MarketPlaceApp):
         return f"heartbeat response: {res}"
 
 
-my_mp_app = MyMarketPlaceApp(app_id="<application_client_id>", client=mp_client)
+my_mp_app = MyMarketPlaceApp(app_id="<application_client_id>")
 print(my_mp_app.heartbeat())
 
 

@@ -1,7 +1,8 @@
 import json
+from typing import Dict, Union
 
 import marketplace_standard_app_api.models.object_storage as object_storage
-from fastapi import Response, UploadFile
+from fastapi import UploadFile
 
 from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
@@ -43,14 +44,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         metadata: dict = None,
         collection_name: object_storage.CollectionName = None,
-    ) -> Response:
-        return Response(
-            self._client.put(
-                self._proxy_path("createOrUpdateCollection"),
-                params={"collection_name": collection_name} if collection_name else {},
-                headers=_encode_metadata(metadata),
-            ).json()
-        )
+    ) -> Union[Dict, str]:
+        return self._client.put(
+            self._proxy_path("createOrUpdateCollection"),
+            params={"collection_name": collection_name} if collection_name else {},
+            headers=_encode_metadata(metadata),
+        ).json()
 
     @check_capability_availability
     def delete_collection(self, collection_name: object_storage.CollectionName):
@@ -62,26 +61,24 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def get_collection_metadata(
         self, collection_name: object_storage.CollectionName
-    ) -> Response:
+    ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
             self._proxy_path("getCollectionMetadata"),
             params={"collection_name": collection_name},
         ).headers
-        return Response(json.dumps(_decode_metadata(headers=response_headers)))
+        return json.dumps(_decode_metadata(headers=response_headers))
 
     @check_capability_availability
     def create_collection(
         self,
         collection_name: object_storage.CollectionName = None,
         metadata: dict = None,
-    ) -> Response:
-        return Response(
-            self._client.put(
-                self._proxy_path("createCollection"),
-                params={"collection_name": collection_name} if collection_name else {},
-                headers=_encode_metadata(metadata),
-            ).json()
-        )
+    ) -> Union[Dict, str]:
+        return self._client.put(
+            self._proxy_path("createCollection"),
+            params={"collection_name": collection_name} if collection_name else {},
+            headers=_encode_metadata(metadata),
+        ).json()
 
     @check_capability_availability
     def create_dataset(
@@ -109,33 +106,29 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
-    ) -> Response:
+    ) -> Union[Dict, str]:
         params = {"collection_name": collection_name}
         if dataset_name:
             params.update({"dataset_name": dataset_name})
-        return Response(
-            self._client.post(
-                self._proxy_path("createDatasetMetadata"),
-                params=params,
-                headers=_encode_metadata(metadata),
-            ).json()
-        )
+        return self._client.post(
+            self._proxy_path("createDatasetMetadata"),
+            params=params,
+            headers=_encode_metadata(metadata),
+        ).json()
 
     @check_capability_availability
     def get_dataset(
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ) -> Response:
-        return Response(
-            self._client.get(
-                self._proxy_path("getDataset"),
-                params={
-                    "collection_name": collection_name,
-                    "dataset_name": dataset_name,
-                },
-            ).json()
-        )
+    ) -> Union[Dict, str]:
+        return self._client.get(
+            self._proxy_path("getDataset"),
+            params={
+                "collection_name": collection_name,
+                "dataset_name": dataset_name,
+            },
+        ).json()
 
     def create_or_replace_dataset(
         self,
@@ -162,17 +155,15 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
         metadata: dict = None,
-    ) -> Response:
-        return Response(
-            self._client.put(
-                self._proxy_path("createOrReplaceDatasetMetadata"),
-                params={
-                    "collection_name": collection_name,
-                    "dataset_name": dataset_name,
-                },
-                headers=_encode_metadata(metadata),
-            ).json()
-        )
+    ) -> Union[Dict, str]:
+        return self._client.put(
+            self._proxy_path("createOrReplaceDatasetMetadata"),
+            params={
+                "collection_name": collection_name,
+                "dataset_name": dataset_name,
+            },
+            headers=_encode_metadata(metadata),
+        ).json()
 
     @check_capability_availability
     def delete_dataset(
@@ -190,12 +181,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
-    ) -> Response:
+    ) -> Union[Dict, str]:
         response_headers: dict = self._client.head(
             self._proxy_path("getDatasetMetadata"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
         ).headers
-        return Response(json.dumps(_decode_metadata(headers=response_headers)))
+        return json.dumps(_decode_metadata(headers=response_headers))
 
     @check_capability_availability
     def list_semantic_mappings(

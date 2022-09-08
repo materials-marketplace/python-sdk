@@ -36,11 +36,10 @@ class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayAp
         app."""
         app_service_path = f"api/applications/{self.client_id}"
         response = self.get(path=app_service_path).json()
-        capability_info = response["capabilities"]
-        capabilities = []
-        for capability in capability_info:
-            capabilities.append(camel_to_snake(capability["name"]))
-        return capabilities
+        return [
+            camel_to_snake(capability["name"])
+            for capability in response["capabilities"]
+        ]
 
     @check_capability_availability
     def heartbeat(self) -> str:

@@ -5,6 +5,7 @@
 """
 
 
+from typing import List
 from urllib.parse import urljoin
 
 from ..utils import camel_to_snake, check_capability_availability
@@ -25,20 +26,20 @@ class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayAp
         super().__init__(**kwargs)
         self.client_id = client_id
         # Must be run before the marketplace_host_url is updated to include the proxy.
-        self.capabilities = capabilities or self.set_capabilities()
+        self.capabilities = capabilities or self.get_capabilities()
         self.marketplace_host_url = urljoin(
             self.marketplace_host_url, f"api/applications/proxy/{self.client_id}/"
         )
 
-    def set_capabilities(self):
+    def get_capabilities(self) -> List[str]:
         """Query the platform to get the capabilities supported by a certain
         app."""
         app_service_path = f"api/applications/{self.client_id}"
         response = self.get(path=app_service_path).json()
-        capability_info = response["capabilities"]
-        self.capabilities = []
-        for capability in capability_info:
-            self.capabilities.append(camel_to_snake(capability["name"]))
+        return [
+            camel_to_snake(capability["name"])
+            for capability in response["capabilities"]
+        ]
 
     @check_capability_availability
     def heartbeat(self) -> str:

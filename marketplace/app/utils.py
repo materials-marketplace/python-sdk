@@ -1,4 +1,4 @@
-"""This moduke contains utilities.
+"""This moduke contains utilities related to MarketPlace apps.
 
 .. currentmodule:: marketplace.app.utils
 .. moduleauthor:: Pablo de Andres, Pranjali Singh (Fraunhofer IWM)

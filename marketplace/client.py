@@ -11,7 +11,7 @@ from urllib.parse import urljoin
 import requests
 from requests import Response
 
-from .version import __version__
+from marketplace.version import __version__
 
 MP_DEFAULT_HOST = "https://www.materials-marketplace.eu/"
 

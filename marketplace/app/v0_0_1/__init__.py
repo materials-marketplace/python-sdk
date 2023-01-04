@@ -11,11 +11,10 @@ from urllib.parse import urljoin
 from ..utils import camel_to_snake, check_capability_availability
 from .data_sink_app import DataSinkApp
 from .data_source_app import DataSourceApp
-from .hpc_app import HpcGatewayApp
 from .transformation_app import TransformationApp
 
 
-class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp, HpcGatewayApp):
+class MarketPlaceApp(DataSinkApp, DataSourceApp, TransformationApp):
     """Base MarketPlace app.
 
     Includes the heartbeat capability and extends the MarketPlace class

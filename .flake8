@@ -1,0 +1,8 @@
+[flake8]
+ignore =
+    # Line length handled by black.
+    E501,
+    # Line break before binary operator, preferred formatting for black.
+    W503,
+    # Whitespace before ':', preferred formatting for black.
+    E203,

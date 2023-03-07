@@ -14,13 +14,11 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     def list_collections(
         self, limit: int = 100, offset: int = 0
     ) -> object_storage.CollectionListResponse:
-        return object_storage.CollectionListResponse(
-            **self._client.get(
+        return self._client.get(
                 self._proxy_path("listCollections"),
                 params={"limit": limit, "offset": offset},
-            ).json()
-        )
-
+            )
+        
     @check_capability_availability
     def list_datasets(
         self,
@@ -28,16 +26,14 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         limit: int = 100,
         offset: int = 0,
     ) -> object_storage.DatasetListResponse:
-        return object_storage.DatasetListResponse(
-            **self._client.get(
+        return self._client.get(
                 self._proxy_path("listDatasets"),
                 params={
                     "collection_name": collection_name,
                     "limit": limit,
                     "offset": offset,
                 },
-            ).json()
-        )
+            )
 
     @check_capability_availability
     def create_or_update_collection(
@@ -63,23 +59,26 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     def get_collection_metadata(
         self, collection_name: object_storage.CollectionName
     ) -> Union[Dict, str]:
-        response_headers: dict = self._client.head(
+        return  self._client.get(
             self._proxy_path("getCollectionMetadata"),
             params={"collection_name": collection_name},
-        ).headers
-        return json.dumps(_decode_metadata(headers=response_headers))
+        )
 
     @check_capability_availability
     def create_collection(
         self,
         collection_name: object_storage.CollectionName = None,
         metadata: dict = None,
+        config: dict = None
     ) -> str:
+        params = {"collection_name": collection_name} if collection_name else {}
+        if config is not None:
+            params.update(config)
         return self._client.put(
             self._proxy_path("createCollection"),
-            params={"collection_name": collection_name} if collection_name else {},
-            headers=_encode_metadata(metadata),
-        ).text
+            data=params,
+            headers=_encode_metadata(metadata) if metadata else {},
+        )
 
     @check_capability_availability
     def create_dataset(
@@ -88,18 +87,20 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
         file: UploadFile = None,
+        config: dict = None
     ) -> object_storage.DatasetCreateResponse:
-        params = {"collection_name": collection_name}
+        params = {"collection_name": collection_name, "file":"dummy value"}
         if dataset_name:
             params.update({"dataset_name": dataset_name})
-        return object_storage.DatasetCreateResponse.parse_obj(
-            self._client.put(
+        if config is not None:
+            params.update(config)
+        return self._client.put(
                 self._proxy_path("createDataset"),
                 params=params,
-                headers=_encode_metadata(metadata),
-                data=file.file,
-            ).json()
-        )
+                data=params,
+                files=file,
+                headers=_encode_metadata(metadata) if metadata else {},
+            )
 
     @check_capability_availability
     def create_dataset_metadata(
@@ -126,7 +127,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         return self._client.get(
             self._proxy_path("getDataset"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
-        ).json()
+        )
 
     def create_or_replace_dataset(
         self,

@@ -54,7 +54,7 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
             self._client.patch(
                 self._proxy_path("updateTransformation"),
                 params={"transformation_id": transformation_id},
-                json=update,
+                json=update.json(),
             ).json()
         )
 

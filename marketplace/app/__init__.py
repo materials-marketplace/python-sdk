@@ -3,7 +3,6 @@ capabilities.
 .. currentmodule:: marketplace.app
 .. moduleauthor:: Pablo de Andres, Pranjali Singh (Fraunhofer IWM)
 """
-import warnings
 from typing import Optional
 
 from packaging.version import parse

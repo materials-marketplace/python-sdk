@@ -1,6 +1,6 @@
 import pytest
 
-from marketplace.app import MarketPlaceApp, get_app
+from marketplace.app import get_app
 
 
 @pytest.fixture

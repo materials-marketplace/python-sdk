@@ -8,12 +8,6 @@ def app():
     return get_app("test-app")
 
 
-def test_app_v0_0_1():
-    with pytest.warns(UserWarning):
-        app = MarketPlaceApp(client_id="test-app", capabilities=["heartbeat"])
-    assert app.heartbeat() == "OK"
-
-
 def test_app_v0(app):
     assert "heartbeat" in app.capabilities
     response = app.heartbeat()

@@ -71,12 +71,12 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         metadata: dict = None,
         config: dict = None
     ) -> str:
-        params = {"collection_name": collection_name} if collection_name else {}
+        data = {"collection_name": collection_name} if collection_name else {}
         if config is not None:
-            params.update(config)
+            data.update(config)
         return self._client.put(
             self._proxy_path("createCollection"),
-            data=params,
+            data=data,
             headers=_encode_metadata(metadata) if metadata else {},
         )
 
@@ -89,15 +89,16 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         file: UploadFile = None,
         config: dict = None
     ) -> object_storage.DatasetCreateResponse:
-        params = {"collection_name": collection_name, "file":"dummy value"}
+        params = {"collection_name": collection_name}
+        data = {}
         if dataset_name:
-            params.update({"dataset_name": dataset_name})
+            data.update({"dataset_name": dataset_name})
         if config is not None:
-            params.update(config)
+            data.update(config)
         return self._client.put(
                 self._proxy_path("createDataset"),
+                data=data,
                 params=params,
-                data=params,
                 files=file,
                 headers=_encode_metadata(metadata) if metadata else {},
             )

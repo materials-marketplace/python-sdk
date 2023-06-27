@@ -13,7 +13,7 @@ from requests import Response
 
 from .version import __version__
 
-MP_DEFAULT_HOST = "https://www.materials-marketplace.eu/"
+MP_DEFAULT_HOST = "https://materials-marketplace.eu/"
 
 
 class MarketPlaceClient:

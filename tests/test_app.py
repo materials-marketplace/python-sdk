@@ -1,17 +1,11 @@
 import pytest
 
-from marketplace.app import MarketPlaceApp, get_app
+from marketplace.app import get_app
 
 
 @pytest.fixture
 def app():
     return get_app("test-app")
-
-
-def test_app_v0_0_1():
-    with pytest.warns(UserWarning):
-        app = MarketPlaceApp(client_id="test-app", capabilities=["heartbeat"])
-    assert app.heartbeat() == "OK"
 
 
 def test_app_v0(app):

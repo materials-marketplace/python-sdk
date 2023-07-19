@@ -4,8 +4,10 @@ exclude examples
 recursive-exclude examples *
 
 exclude .pre-commit-config.yaml
-exclude .gitlab-ci.yml
+exclude .flake8
 
 include LICENSE
 include README.md
+include .env_template
+recursive-include marketplace *.md
 recursive-include logos *.png

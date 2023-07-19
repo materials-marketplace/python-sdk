@@ -15,15 +15,17 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self, limit: int = 100, offset: int = 0
     ) -> object_storage.CollectionResponseModel:
         response = self._client.get(
-                self._proxy_path("listCollections"),
-                params={"limit": limit, "offset": offset},
-            )
+            self._proxy_path("listCollections"),
+            params={"limit": limit, "offset": offset},
+        )
         try:
             return object_storage.CollectionResponseModel.parse_obj(
                 response.json()
             ).dict()
-        except:
-            return "Error: Server returned {} while fetching collections: {}".format(response.status_code, response.text)
+        except Exception:
+            return "Error: Server returned {} while fetching collections: {}".format(
+                response.status_code, response.text
+            )
 
     @check_capability_availability
     def list_datasets(
@@ -33,19 +35,19 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         offset: int = 0,
     ) -> object_storage.DatasetResponseModel:
         response = self._client.get(
-                self._proxy_path("listDatasets"),
-                params={
-                    "collection_name": collection_name,
-                    "limit": limit,
-                    "offset": offset,
-                },
-            )
+            self._proxy_path("listDatasets"),
+            params={
+                "collection_name": collection_name,
+                "limit": limit,
+                "offset": offset,
+            },
+        )
         try:
-            return object_storage.DatasetResponseModel.parse_obj(
-                response.json()
-            ).dict()
+            return object_storage.DatasetResponseModel.parse_obj(response.json()).dict()
         except Exception:
-           return "Error: Server returned {} while fetching datasets: {}".format(response.status_code, response.text)
+            return "Error: Server returned {} while fetching datasets: {}".format(
+                response.status_code, response.text
+            )
 
     @check_capability_availability
     def create_or_update_collection(
@@ -61,10 +63,10 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
 
     @check_capability_availability
     def delete_collection(self, collection_name: object_storage.CollectionName):
-        self._client.delete(
+        return self._client.delete(
             self._proxy_path("deleteCollection"),
             params={"collection_name": collection_name},
-        )
+        ).text
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
@@ -82,7 +84,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         self,
         collection_name: object_storage.CollectionName = None,
         metadata: dict = None,
-        config: dict = None
+        config: dict = None,
     ) -> object_storage.CollectionCreateResponse:
         data = {"collection_name": collection_name} if collection_name else {}
         if config is not None:
@@ -93,9 +95,13 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             headers=_encode_metadata(metadata) if metadata else {},
         )
         try:
-            return object_storage.CollectionCreateResponse.parse_obj(response.json()).dict()
-        except:
-            return "Error: Server returned {} while creating collection {}: {}".format(response.status_code, collection_name, response.text)
+            return object_storage.CollectionCreateResponse.parse_obj(
+                response.json()
+            ).dict()
+        except Exception:
+            return "Error: Server returned {} while creating collection {}: {}".format(
+                response.status_code, collection_name, response.text
+            )
 
     @check_capability_availability
     def create_dataset(
@@ -104,7 +110,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
         file: UploadFile = None,
-        config: dict = None
+        config: dict = None,
     ) -> object_storage.DatasetCreateResponse:
         params = {"collection_name": collection_name}
         data = {}
@@ -113,18 +119,20 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         if config is not None:
             data.update(config)
         response = self._client.put(
-                self._proxy_path("createDataset"),
-                data=data,
-                params=params,
-                files=file,
-                headers=_encode_metadata(metadata) if metadata else {},
-            )
+            self._proxy_path("createDataset"),
+            data=data,
+            params=params,
+            files=file,
+            headers=_encode_metadata(metadata) if metadata else {},
+        )
         try:
             return object_storage.DatasetCreateResponse.parse_obj(
                 response.json()
             ).dict()
-        except:
-            return "Error: Server returned {} while creating dataset {}: {}".format(response.status_code, dataset_name, response.text)        
+        except Exception:
+            return "Error: Server returned {} while creating dataset {}: {}".format(
+                response.status_code, dataset_name, response.text
+            )
 
     @check_capability_availability
     def create_dataset_metadata(
@@ -191,10 +199,10 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
     ):
-        self._client.delete(
+        return self._client.delete(
             self._proxy_path("deleteDataset"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
-        )
+        ).text
 
     # NOTE: change to GET for the meeting if proxy doesn't support HEAD requests
     @check_capability_availability
@@ -230,25 +238,46 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
                 params={"semantic_mapping_id": semantic_mapping_id},
             ).json()
         )
-        
+
     @check_capability_availability
-    def get_collection_dcat(
+    def get_collection_metadata_dcat(
         self, collection_name: object_storage.CollectionName
     ) -> Union[Dict, str]:
         response: dict = self._client.get(
-            self._proxy_path("getCollectionDcat"),
+            self._proxy_path("getCollectionMetadataDcat"),
             params={"collection_name": collection_name},
         ).text
         return response
-    
+
     @check_capability_availability
-    def get_dataset_dcat(
+    def get_dataset_metadata_dcat(
         self,
         collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
     ) -> Union[Dict, str]:
-        response: dict = self._client.head(
-            self._proxy_path("getDatasetDcat"),
+        response: dict = self._client.get(
+            self._proxy_path("getDatasetMetadataDcat"),
             params={"collection_name": collection_name, "dataset_name": dataset_name},
+        ).text
+        return response
+
+    @check_capability_availability
+    def query_dataset(
+        self,
+        collection_name: object_storage.CollectionName,
+        dataset_name: object_storage.DatasetName,
+        query: str,
+    ) -> Union[Dict, str]:
+        response: dict = self._client.post(
+            self._proxy_path("queryDataset"),
+            params={"collection_name": collection_name, "dataset_name": dataset_name},
+            json={"query": query},
+        ).text
+        return response
+
+    @check_capability_availability
+    def query(self, query: str, meta_data: bool = False) -> Union[Dict, str]:
+        response: dict = self._client.post(
+            self._proxy_path("query"), json={"query": query, "meta_data": meta_data}
         ).text
         return response

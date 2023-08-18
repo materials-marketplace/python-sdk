@@ -1,5 +1,6 @@
 import json
 from typing import Dict, Union
+from uuid import UUID
 
 import marketplace_standard_app_api.models.object_storage as object_storage
 from fastapi import UploadFile
@@ -281,3 +282,36 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
             self._proxy_path("query"), json={"query": query, "meta_data": meta_data}
         ).text
         return response
+
+    @check_capability_availability
+    def upload_data_cache(
+        self,
+        file: UploadFile,
+        uuid: UUID = None,
+        metadata: dict = None,
+    ) -> object_storage.UploadDataResponse:
+        data = {}
+        if uuid:
+            data.update({"uuid": "aa"})
+        response = self._client.post(
+            self._proxy_path("uploadDataCache"),
+            data=data,
+            files=file,
+            headers=_encode_metadata(metadata) if metadata else {},
+        )
+        try:
+            return object_storage.UploadDataResponse.parse_obj(response.json()).dict()
+        except Exception:
+            return "Error: Server returned {} while creating dataset {}: {}".format(
+                response.status_code, uuid, response.text
+            )
+
+    @check_capability_availability
+    def download_data_cache(
+        self,
+        uuid: UUID,
+    ):
+        return self._client.get(
+            self._proxy_path("downloadDataCache"),
+            params={"uuid": uuid},
+        )

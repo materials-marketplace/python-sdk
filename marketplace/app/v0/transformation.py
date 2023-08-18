@@ -1,4 +1,6 @@
 import marketplace_standard_app_api.models.transformation as transformation
+from fastapi.responses import JSONResponse, Response
+from pydantic.schema import schema
 
 from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
@@ -102,3 +104,47 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
                 params={"transformation_id": transformation_id},
             ).json()
         ).state
+
+    @check_capability_availability
+    def get_transformation_log(
+        self, transformation_id: transformation.TransformationId
+    ) -> Response:
+        return self._client.get(
+            self._proxy_path("getTransformationLog"),
+            params={"transformation_id": transformation_id},
+        ).content
+
+    @check_capability_availability
+    def new_model(
+        self, modelname: transformation.ModelName, data: dict
+    ) -> transformation.ModelCreateResponse:
+        return transformation.ModelCreateResponse.parse_obj(
+            self._client.post(
+                self._proxy_path("newModel"), params={"modelname": modelname}, json=data
+            ).json()
+        )
+
+    @check_capability_availability
+    def get_schema(self, modelname: transformation.ModelName) -> schema:
+        return self._client.get(
+            self._proxy_path("getSchema"),
+            params={"modelname": modelname},
+        ).json()
+
+    @check_capability_availability
+    def get_example(self, modelname: transformation.ModelName) -> JSONResponse:
+        return self._client.get(
+            self._proxy_path("getExample"),
+            params={"modelname": modelname},
+        ).json()
+
+    @check_capability_availability
+    def get_models(
+        self, limit: int = 100, offset: int = 0
+    ) -> transformation.RegisteredModels:
+        return transformation.RegisteredModels.parse_obj(
+            self._client.get(
+                self._proxy_path("getModels"),
+                params={"limit": limit, "offset": offset},
+            ).json()
+        )

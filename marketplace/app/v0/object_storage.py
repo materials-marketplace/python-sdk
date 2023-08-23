@@ -8,6 +8,8 @@ from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
 from .utils import _decode_metadata, _encode_metadata
 
+DEFAULT_COLLECTION_NAME = "DEFAULT_COLLECTION"
+
 
 class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
@@ -106,7 +108,7 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def create_dataset(
         self,
-        collection_name: object_storage.CollectionName,
+        collection_name: object_storage.CollectionName = DEFAULT_COLLECTION_NAME,
         dataset_name: object_storage.DatasetName = None,
         metadata: dict = None,
         file: UploadFile = None,
@@ -153,8 +155,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def get_dataset(
         self,
-        collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
+        collection_name: object_storage.CollectionName = DEFAULT_COLLECTION_NAME,
     ) -> Union[Dict, str]:
         return self._client.get(
             self._proxy_path("getDataset"),
@@ -196,8 +198,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def delete_dataset(
         self,
-        collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
+        collection_name: object_storage.CollectionName = DEFAULT_COLLECTION_NAME,
     ):
         return self._client.delete(
             self._proxy_path("deleteDataset"),
@@ -252,8 +254,8 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def get_dataset_metadata_dcat(
         self,
-        collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
+        collection_name: object_storage.CollectionName = DEFAULT_COLLECTION_NAME,
     ) -> Union[Dict, str]:
         response: dict = self._client.get(
             self._proxy_path("getDatasetMetadataDcat"),
@@ -264,9 +266,9 @@ class MarketPlaceObjectStorageApp(_MarketPlaceAppBase):
     @check_capability_availability
     def query_dataset(
         self,
-        collection_name: object_storage.CollectionName,
         dataset_name: object_storage.DatasetName,
         query: str,
+        collection_name: object_storage.CollectionName = DEFAULT_COLLECTION_NAME,
     ) -> Union[Dict, str]:
         response: dict = self._client.post(
             self._proxy_path("queryDataset"),

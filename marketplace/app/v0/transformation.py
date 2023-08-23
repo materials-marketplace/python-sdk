@@ -20,11 +20,19 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
 
     @check_capability_availability
     def new_transformation(
-        self, new_transformation: transformation.NewTransformationModel
+        self,
+        new_transformation: transformation.NewTransformationModel,
+        config: dict = None,
     ) -> transformation.TransformationCreateResponse:
+        params = {}
+        # send additional key value as query parameters if some app needs it
+        if config is not None:
+            params.update(config)
         return transformation.TransformationCreateResponse.parse_obj(
             self._client.post(
-                self._proxy_path("newTransformation"), json=new_transformation
+                self._proxy_path("newTransformation"),
+                json=new_transformation,
+                params=params,
             ).json()
         )
 
@@ -113,16 +121,6 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
             self._proxy_path("getTransformationLog"),
             params={"transformation_id": transformation_id},
         ).content
-
-    @check_capability_availability
-    def new_model(
-        self, modelname: transformation.ModelName, data: dict
-    ) -> transformation.ModelCreateResponse:
-        return transformation.ModelCreateResponse.parse_obj(
-            self._client.post(
-                self._proxy_path("newModel"), params={"modelname": modelname}, json=data
-            ).json()
-        )
 
     @check_capability_availability
     def get_schema(self, modelname: transformation.ModelName) -> schema:

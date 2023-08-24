@@ -123,17 +123,17 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         ).content
 
     @check_capability_availability
-    def get_schema(self, modelname: transformation.ModelName) -> schema:
+    def get_schema(self, model_name: transformation.ModelName) -> schema:
         return self._client.get(
             self._proxy_path("getSchema"),
-            params={"modelname": modelname},
+            params={"model_name": model_name},
         ).json()
 
     @check_capability_availability
-    def get_example(self, modelname: transformation.ModelName) -> JSONResponse:
+    def get_example(self, model_name: transformation.ModelName) -> JSONResponse:
         return self._client.get(
             self._proxy_path("getExample"),
-            params={"modelname": modelname},
+            params={"model_name": model_name},
         ).json()
 
     @check_capability_availability

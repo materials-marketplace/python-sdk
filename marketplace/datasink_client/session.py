@@ -6,7 +6,7 @@ from functools import wraps
 from keycloak import KeycloakOpenID
 
 from marketplace.app import MarketPlaceClient, get_app
-from marketplace.data_sink_client.utils import (
+from marketplace.datasink_client.utils import (
     get_collections_from_catalog,
     parse_objects_from_collection,
 )

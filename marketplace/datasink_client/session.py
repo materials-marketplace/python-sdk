@@ -138,16 +138,16 @@ class MPSession:
                 collection_name=collection_name, config=config
             )
             if "collection_id" not in response:
-                print(response)
+                #print(response)
                 return None
             else:
                 return response["collection_id"]
 
         except Exception as e:
-            print(
-                f"Something went wrong while uploading the data with title {collection_name}. "
-                + str(e)
-            )
+            #print(
+            #    f"Something went wrong while uploading the data with title {collection_name}. "
+            #    + str(e)
+            #)
             return None
 
     @reconfigure_if_expired

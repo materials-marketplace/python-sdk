@@ -299,8 +299,6 @@ class MPSession:
             )
             if collection_id is not None:
                 response_list.append((collection_name, collection_id))
-            else:
-                return
         else:
             raise Exception("collection title cannot be empty.")
 

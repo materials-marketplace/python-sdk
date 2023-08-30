@@ -138,10 +138,9 @@ class MPSession:
                 collection_name=collection_name, config=config
             )
             if "collection_id" not in response:
-                print(response)
                 return None
             else:
-                return response["collection_id"]
+                return response
 
         except Exception as e:
             print(
@@ -294,13 +293,11 @@ class MPSession:
 
         response_list = []
         if collection_name is not None:
-            collection_id = self.create_collection(
+            response = self.create_collection(
                 collection_name=collection_name, sub_collection_id=None
             )
-            if collection_id is not None:
-                response_list.append((collection_name, collection_id))
-            else:
-                return
+            if response is not None:
+                response_list.append((collection_name, response["collection_id"]))
         else:
             raise Exception("collection title cannot be empty.")
 

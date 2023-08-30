@@ -1,6 +1,4 @@
 import marketplace_standard_app_api.models.transformation as transformation
-from fastapi.responses import JSONResponse, Response
-from pydantic.schema import schema
 
 from ..utils import check_capability_availability
 from .base import _MarketPlaceAppBase
@@ -112,37 +110,3 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
                 params={"transformation_id": transformation_id},
             ).json()
         ).state
-
-    @check_capability_availability
-    def get_transformation_log(
-        self, transformation_id: transformation.TransformationId
-    ) -> Response:
-        return self._client.get(
-            self._proxy_path("getTransformationLog"),
-            params={"transformation_id": transformation_id},
-        ).content
-
-    @check_capability_availability
-    def get_schema(self, model_name: transformation.ModelName) -> schema:
-        return self._client.get(
-            self._proxy_path("getSchema"),
-            params={"model_name": model_name},
-        ).json()
-
-    @check_capability_availability
-    def get_example(self, model_name: transformation.ModelName) -> JSONResponse:
-        return self._client.get(
-            self._proxy_path("getExample"),
-            params={"model_name": model_name},
-        ).json()
-
-    @check_capability_availability
-    def get_models(
-        self, limit: int = 100, offset: int = 0
-    ) -> transformation.RegisteredModels:
-        return transformation.RegisteredModels.parse_obj(
-            self._client.get(
-                self._proxy_path("getModels"),
-                params={"limit": limit, "offset": offset},
-            ).json()
-        )

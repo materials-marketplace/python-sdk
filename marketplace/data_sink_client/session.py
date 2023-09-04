@@ -244,7 +244,9 @@ class MPSession:
 
         :returns: List of data
         """
-        response = self.marketPlace.query_dataset(collection_name, dataset_name, query)
+        response = self.marketPlace.query_dataset(
+            collection_name=collection_name, dataset_name=dataset_name, query=query
+        )
         return response
 
     @reconfigure_if_expired

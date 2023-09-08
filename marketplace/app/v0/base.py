@@ -1,7 +1,7 @@
 from typing import Optional
 from urllib.parse import urljoin
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from marketplace_standard_app_api.models.system import GlobalSearchResponse
 
 from marketplace.client import MarketPlaceClient
@@ -41,3 +41,19 @@ class _MarketPlaceAppBase:
                 params={"q": q, "limit": limit, "offset": offset},
             ).json()
         )
+
+    @check_capability_availability
+    def get_logs(
+        self, id: Optional[str], limit: int = 100, offset: int = 0
+    ) -> Response:
+        return self._client.get(
+            self._proxy_path("getLogs"),
+            params={"id": id, "limit": limit, "offset": offset},
+        ).content
+
+    @check_capability_availability
+    def get_info(self, config: dict = None) -> JSONResponse:
+        params = {}
+        if config is not None:
+            params.update(config)
+        return self._client.get(self._proxy_path("getInfo"), params=params).json()

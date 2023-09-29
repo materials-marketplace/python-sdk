@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 
-from marketplace.data_sink_client.session import MPSession
+from marketplace.datasink_client.session import MPSession
 
 
 class CommaSeparatedListofPythonLiteralValues(click.Option):

@@ -23,23 +23,32 @@ def configure_token(func):
     def func_(self, *arg, **kwargs):
         r = func(self, *arg, **kwargs)
         if r.status_code == 401:
-            token = configure()
-            if token is None:
-                raise (
-                    "Authentication failure. Please provide valid MP_ACCESS_TOKEN or keycloak credentials."
+            response = configure()
+            if not response["status"] == "success":
+                raise Exception(
+                    "User authentication failure. Reason:" + response["message"]
                 )
+            token = response["token"]
             os.environ["MP_ACCESS_TOKEN"] = token
             self.access_token = token
 
         r = func(self, *arg, **kwargs)
         if r.status_code > 400:
-            raise Exception("Server returned with an Exception. Details: ", r.text)
+            raise Exception("Server returned with an Exception. Details: " + r.text)
         return r
 
     return func_
 
 
 def configure():
+    """
+    Authenticates a user with marketplace username and password using keycloak
+    authentication module. If the authentication is succesfull then this method returns
+    user token within a dictionary. Otherwise, an exception is caught and the
+    resaon for failure is returned as dict. In order to use keycloak authentication
+    with username and password we have to configure all the necessary keycloak
+    environment variables. Configurations can be obtained from market place admin.
+    """
     # Configure client
     server_url = os.environ.get("KEYCLOAK_SERVER_URL")
     client_id = os.environ.get("KEYCLOAK_CLIENT_ID")
@@ -56,9 +65,9 @@ def configure():
     try:
         token = keycloak_openid.token(user, passwd)
         token = token["access_token"]
-        return token
-    except Exception:
-        return None
+        return {"status": "success", "token": token, "message": ""}
+    except Exception as e:
+        return {"status": "failure", "token": None, "message": str(e)}
 
 
 class MarketPlaceClient:
@@ -95,31 +104,26 @@ class MarketPlaceClient:
         userinfo.raise_for_status()
         return userinfo.json()
 
+    @configure_token
     def _request(self, op, path, **kwargs) -> Response:
         kwargs.setdefault("headers", {}).update(self.default_headers)
         full_url = urljoin(self.marketplace_host_url, path)
         return op(url=full_url, **kwargs)
 
-    @configure_token
     def get(self, path: str, **kwargs):
         return self._request(requests.get, path, **kwargs)
 
-    @configure_token
     def post(self, path: str, **kwargs):
         return self._request(requests.post, path, **kwargs)
 
-    @configure_token
     def put(self, path: str, **kwargs):
         return self._request(requests.put, path, **kwargs)
 
-    @configure_token
     def delete(self, path: str, **kwargs):
         return self._request(requests.delete, path, **kwargs)
 
-    @configure_token
     def head(self, path: str, **kwargs):
         return self._request(requests.head, path, **kwargs)
 
-    @configure_token
     def patch(self, path: str, **kwargs):
         return self._request(requests.patch, path, **kwargs)

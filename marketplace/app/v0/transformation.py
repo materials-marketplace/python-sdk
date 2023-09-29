@@ -22,6 +22,20 @@ class MarketPlaceTransformationApp(_MarketPlaceAppBase):
         new_transformation: transformation.NewTransformationModel,
         config: dict = None,
     ) -> transformation.TransformationCreateResponse:
+        """
+        Creates a new transformation.
+
+        Args:
+        - new_transformation (NewTransformationModel): A dictionary representing
+            parameters to create a new transformation.
+        - config (dict): A dictionary representing query parameters.
+            Any key-value passed inside this dictionary are sent as query parameters
+            to the application.
+
+        Retruns:
+            TransformationCreateResponse: A dictionary containing id of the
+            created transformation.
+        """
         params = {}
         # send additional key value as query parameters if some app needs it
         if config is not None:

@@ -1,4 +1,5 @@
 """Simple script illustrating some of the features of this package."""
+
 from pprint import pprint
 
 from fastapi.responses import HTMLResponse

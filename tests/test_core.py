@@ -4,6 +4,7 @@
 
 .. moduleauthor:: Carl Simon Adorf <simon.adorf@epfl.ch>
 """
+
 import pytest
 
 from marketplace.client import MarketPlaceClient

@@ -17,15 +17,13 @@ def get_datasets_uid_sparql(collections):
     g = Graph()
     g.parse(data=collections, format="json-ld")
 
-    qrs = g.query(
-        """
+    qrs = g.query("""
         SELECT ?asource ?id
         WHERE {
             ?asource a <http://www.w3.org/ns/dcat#Dataset> .
             ?asource <http://purl.org/dc/terms/identifier> ?id.
             }
-        """
-    )
+        """)
 
     for row in qrs:
         uid_list.append(row.id.value)
@@ -46,15 +44,13 @@ def get_collections_uid_sparql(collections):
     g = Graph()
     g.parse(data=collections, format="json-ld")
 
-    qrs = g.query(
-        """
+    qrs = g.query("""
         SELECT ?asource ?id
         WHERE {
             ?asource a <http://www.w3.org/ns/dcat#Catalog> .
             ?asource <http://purl.org/dc/terms/identifier> ?id.
             }
-        """
-    )
+        """)
 
     for row in qrs:
         uid_list.append(row.id.value)
@@ -74,16 +70,14 @@ def get_collections_from_catalog(collections):
     g = Graph()
     g.parse(data=collections, format="json-ld")
 
-    qrs = g.query(
-        """
+    qrs = g.query("""
         SELECT ?asource ?identifier ?subject ?title
         WHERE {
             ?asource a <http://www.w3.org/ns/dcat#Catalog> .
             ?asource <http://purl.org/dc/terms/identifier> ?identifier.
             ?asource <http://purl.org/dc/terms/title> ?title.
             }
-        """
-    )
+        """)
 
     for row in qrs:
         inf_packages.append(row.identifier.value)
@@ -214,8 +208,7 @@ def get_datasets_from_catalog(datasets):
     g = Graph()
     g.parse(data=datasets, format="turtle")
 
-    qrs = g.query(
-        """
+    qrs = g.query("""
         SELECT ?asource ?identifier ?isPartOf ?title ?spatial
         WHERE {
             ?asource a <http://www.w3.org/ns/dcat#Dataset> .
@@ -224,8 +217,7 @@ def get_datasets_from_catalog(datasets):
             ?asource <http://purl.org/dc/terms/title> ?title.
             ?asource <http://purl.org/dc/terms/spatial> ?spatial.
             }
-        """
-    )
+        """)
 
     for row in qrs:
         dataset = {}
